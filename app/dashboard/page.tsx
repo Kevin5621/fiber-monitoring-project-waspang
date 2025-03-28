@@ -71,7 +71,7 @@ const DashboardPage = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle>Milestone Saat Ini</CardTitle>
-          <Link href="/waspang/milestones" className="text-sm text-primary hover:underline">
+          <Link href="/dashboard/milestones" className="text-sm text-primary hover:underline">
             Lihat Semua
           </Link>
         </CardHeader>
@@ -111,7 +111,7 @@ const DashboardPage = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Laporan Harian</CardTitle>
-              <Link href="/waspang/reports" className="text-sm text-primary hover:underline">
+              <Link href="/dashboard/reports" className="text-sm text-primary hover:underline">
                 Riwayat
               </Link>
             </div>
@@ -137,7 +137,7 @@ const DashboardPage = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Dokumentasi Dibutuhkan</CardTitle>
-              <Link href="/waspang/documentation" className="text-sm text-primary hover:underline">
+              <Link href="/dashboard/documentation" className="text-sm text-primary hover:underline">
                 Lihat Semua
               </Link>
             </div>
@@ -170,7 +170,7 @@ const DashboardPage = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Aktivitas Terakhir</CardTitle>
-              <Link href="/waspang/activity" className="text-sm text-primary hover:underline">
+              <Link href="/dashboard/activity" className="text-sm text-primary hover:underline">
                 Lihat Semua
               </Link>
             </div>

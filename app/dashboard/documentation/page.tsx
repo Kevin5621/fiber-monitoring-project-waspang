@@ -341,7 +341,7 @@ const DocumentationPage = () => {
                           <div>
                             <h3 className="text-base font-medium truncate">{doc.name}</h3>
                             <Link 
-                              href={`/waspang/project/${doc.projectId}`}
+                              href={`/dashboard/project/${doc.projectId}`}
                               className="text-sm text-muted-foreground hover:underline"
                             >
                               {doc.project}
@@ -428,7 +428,7 @@ const DocumentationPage = () => {
                           <div>
                             <h3 className="text-base font-medium truncate">{doc.name}</h3>
                             <Link 
-                              href={`/waspang/project/${doc.projectId}`}
+                              href={`/dashboard/project/${doc.projectId}`}
                               className="text-sm text-muted-foreground hover:underline"
                             >
                               {doc.project}
@@ -551,7 +551,7 @@ const DocumentationPage = () => {
                         ))}
                       {project.docCount > 3 && (
                         <Link 
-                          href={`/waspang/project/${project.id}`}
+                          href={`/dashboard/project/${project.id}`}
                           className="block text-sm text-primary hover:underline text-center mt-3"
                         >
                           Lihat semua dokumentasi

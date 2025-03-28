@@ -403,7 +403,7 @@ const ReportsPage = () => {
                             <div>
                               <h3 className="text-base font-medium">{report.title}</h3>
                               <Link 
-                                href={`/waspang/project/${report.projectId}`}
+                                href={`/dashboard/project/${report.projectId}`}
                                 className="text-sm text-muted-foreground hover:underline"
                               >
                                 {report.project}
@@ -534,7 +534,7 @@ const ReportsPage = () => {
                                   <div>
                                     <h3 className="text-base font-medium">{report.title}</h3>
                                     <Link 
-                                      href={`/waspang/project/${report.projectId}`}
+                                      href={`/dashboard/project/${report.projectId}`}
                                       className="text-sm text-muted-foreground hover:underline"
                                     >
                                       {report.project}

@@ -286,7 +286,7 @@ const ProjectsPage = () => {
               <div className="flex items-center justify-between">
                 {getStatusBadge(project.status)}
                 <Link 
-                  href={`/waspang/project/${project.id}`}
+                  href={`/dashboard/project/${project.id}`}
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   Lihat Detail
@@ -356,7 +356,7 @@ const ProjectsPage = () => {
                           <div>
                             <h4 className="font-medium text-base">{milestone.name}</h4>
                             <Link 
-                              href={`/waspang/project/${milestone.projectId}`} 
+                              href={`/dashboard/project/${milestone.projectId}`} 
                               className="text-sm text-muted-foreground hover:underline"
                             >
                               {milestone.project}
@@ -396,7 +396,7 @@ const ProjectsPage = () => {
                         <div className="flex items-start justify-between">
                           <div>
                             <Link 
-                              href={`/waspang/project/${report.projectId}`} 
+                              href={`/dashboard/project/${report.projectId}`} 
                               className="font-medium text-base hover:underline"
                             >
                               {report.project}

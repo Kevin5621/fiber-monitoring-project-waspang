@@ -207,7 +207,7 @@ const ProjectDetailPage = () => {
       {/* Page Title and Back Button */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Link href="/waspang/project" className="text-muted-foreground hover:text-foreground">
+          <Link href="/dashboard/project" className="text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
