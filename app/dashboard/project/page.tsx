@@ -184,11 +184,11 @@ const ProjectsPage = () => {
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'not-started':
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">Belum Dimulai</Badge>;
+        return <Badge variant="outline" className="bg-muted/50-100 text-gray-800 hover:bg-muted/50-100">Belum Dimulai</Badge>;
       case 'in-progress':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">Sedang Berjalan</Badge>;
+        return <Badge variant="outline" className="bg-info-100 text-blue-800 hover:bg-info-100">Sedang Berjalan</Badge>;
       case 'completed':
-        return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">Selesai</Badge>;
+        return <Badge variant="outline" className="bg-success-100 text-green-800 hover:bg-success-100">Selesai</Badge>;
       default:
         return null;
     }
@@ -338,10 +338,10 @@ const ProjectsPage = () => {
                     <div key={milestone.id} className="flex items-start gap-5 pb-5 border-b border-border last:border-0 last:pb-0">
                       <div className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         milestone.status === 'completed' 
-                          ? 'bg-green-100' 
+                          ? 'bg-success-100' 
                           : milestone.status === 'in-progress' 
-                            ? 'bg-blue-100' 
-                            : 'bg-gray-100'
+                            ? 'bg-info-100' 
+                            : 'bg-muted/50-100'
                       }`}>
                         {milestone.status === 'completed' ? (
                           <Check className="h-4 w-4 text-green-600" />
@@ -403,7 +403,7 @@ const ProjectsPage = () => {
                             </Link>
                             <div className="mt-1 text-sm text-muted-foreground line-clamp-2">{report.highlights}</div>
                           </div>
-                          <Badge className="ml-2 bg-green-100 text-green-800 hover:bg-green-100">
+                          <Badge className="ml-2 bg-success-100 text-green-800 hover:bg-success-100">
                             Selesai
                           </Badge>
                         </div>

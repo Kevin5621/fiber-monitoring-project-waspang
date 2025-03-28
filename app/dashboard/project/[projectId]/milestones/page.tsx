@@ -77,21 +77,21 @@ const MilestonesPage = ({ params }: { params: { projectId: string } }) => {
 
   const getStatusColor = (status: string) => {
     switch(status) {
-      case 'completed': return 'bg-green-500';
-      case 'in-progress': return 'bg-blue-500';
-      case 'not-started': return 'bg-gray-300';
-      default: return 'bg-gray-300';
+      case 'completed': return 'bg-success-500';
+      case 'in-progress': return 'bg-info-500';
+      case 'not-started': return 'bg-muted/50-300';
+      default: return 'bg-muted/50-300';
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'not-started':
-        return <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Belum Dimulai</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-muted/50-100 text-gray-800">Belum Dimulai</span>;
       case 'in-progress':
-        return <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Sedang Berjalan</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-info-100 text-blue-800">Sedang Berjalan</span>;
       case 'completed':
-        return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Selesai</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-success-100 text-green-800">Selesai</span>;
       default:
         return null;
     }
@@ -100,15 +100,15 @@ const MilestonesPage = ({ params }: { params: { projectId: string } }) => {
   const getDocStatusIcon = (status: string) => {
     switch(status) {
       case 'completed': 
-        return <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+        return <div className="h-5 w-5 rounded-full bg-success-100 flex items-center justify-center text-green-600">
           <Check className="h-3 w-3" />
         </div>;
       case 'in-progress':
-        return <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+        return <div className="h-5 w-5 rounded-full bg-info-100 flex items-center justify-center text-blue-600">
           <FileText className="h-3 w-3" />
         </div>;
       case 'not-started':
-        return <div className="h-5 w-5 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+        return <div className="h-5 w-5 rounded-full bg-muted/50-100 flex items-center justify-center text-gray-400">
           <PlusCircle className="h-3 w-3" />
         </div>;
       default:
@@ -117,17 +117,17 @@ const MilestonesPage = ({ params }: { params: { projectId: string } }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted/50-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link href={`/projects/${project.id}`} className="mr-4 text-gray-400 hover:text-gray-500">
+            <Link href={`/projects/${project.id}`} className="mr-4 text-gray-400 hover:text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div>
-              <h1 className="text-xl font-medium text-gray-900">Milestone</h1>
-              <p className="text-sm text-gray-500">{project.name}</p>
+              <h1 className="text-xl font-medium text-foreground">Milestone</h1>
+              <p className="text-sm text-muted-foreground">{project.name}</p>
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@ const MilestonesPage = ({ params }: { params: { projectId: string } }) => {
         {/* Timeline */}
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted/50-200"></div>
           
           {/* Milestone items */}
           <div className="space-y-8">
@@ -148,12 +148,12 @@ const MilestonesPage = ({ params }: { params: { projectId: string } }) => {
                 <div className={`absolute left-4 w-4 h-4 rounded-full ${getStatusColor(milestone.status)} transform -translate-x-1/2`}></div>
                 
                 {/* Content card */}
-                <div className="ml-10 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div className="ml-10 bg-card rounded-lg shadow-sm border border-border-100 overflow-hidden">
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h2 className="text-lg font-medium text-gray-900">{milestone.name}</h2>
-                        <div className="flex items-center mt-1 text-sm text-gray-500">
+                        <h2 className="text-lg font-medium text-foreground">{milestone.name}</h2>
+                        <div className="flex items-center mt-1 text-sm text-muted-foreground">
                           <Calendar className="h-4 w-4 mr-1" />
                           <span>{milestone.date}</span>
                         </div>
@@ -165,24 +165,24 @@ const MilestonesPage = ({ params }: { params: { projectId: string } }) => {
                     
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-500">Progres</span>
-                        <span className="text-sm font-medium text-gray-700">{milestone.progress}%</span>
+                        <span className="text-sm text-muted-foreground">Progres</span>
+                        <span className="text-sm font-medium text-foreground/80">{milestone.progress}%</span>
                       </div>
-                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted/50-200 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-blue-600 rounded-full"
+                          className="h-full bg-info-600 rounded-full"
                           style={{ width: `${milestone.progress}%` }}
                         ></div>
                       </div>
                     </div>
                     
-                    <div className="border-t border-gray-100 pt-4">
-                      <h3 className="text-sm font-medium text-gray-700 mb-3">Dokumentasi yang Dibutuhkan</h3>
+                    <div className="border-t border-border-100 pt-4">
+                      <h3 className="text-sm font-medium text-foreground/80 mb-3">Dokumentasi yang Dibutuhkan</h3>
                       <ul className="space-y-2">
                         {milestone.requiredDocs.map((doc, docIndex) => (
                           <li key={docIndex} className="flex items-center text-sm">
                             {getDocStatusIcon(doc.status)}
-                            <span className="ml-2 text-gray-700">{doc.name}</span>
+                            <span className="ml-2 text-foreground/80">{doc.name}</span>
                           </li>
                         ))}
                       </ul>

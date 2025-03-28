@@ -43,8 +43,8 @@ const DashboardPage = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Milestone Terdekat</CardTitle>
-            <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
-              <Clock className="h-4 w-4 text-amber-600" />
+            <div className="h-8 w-8 rounded-full bg-warning/10 flex items-center justify-center">
+              <Clock className="h-4 w-4 text-warning" />
             </div>
           </CardHeader>
           <CardContent>
@@ -122,7 +122,7 @@ const DashboardPage = () => {
                 <Calendar className="h-4 w-4 text-muted-foreground mr-2" />
                 <span>23 Maret 2025</span>
               </div>
-              <Badge variant="outline" className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+              <Badge variant="outline" className="bg-warning/10 text-warning hover:bg-warning/10">
                 Belum Dibuat
               </Badge>
             </div>

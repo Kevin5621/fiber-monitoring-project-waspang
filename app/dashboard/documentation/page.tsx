@@ -190,7 +190,7 @@ const DocumentationPage = () => {
       case 'Word':
         return <FileText className="h-6 w-6 text-blue-500" />;
       default:
-        return <File className="h-6 w-6 text-gray-500" />;
+        return <File className="h-6 w-6 text-muted-foreground" />;
     }
   };
 

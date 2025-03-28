@@ -55,9 +55,9 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'pending':
-        return <span className="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-800">Menunggu</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning">Menunggu</span>;
       case 'approved':
-        return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Disetujui</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-success-100 text-green-800">Disetujui</span>;
       case 'rejected':
         return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Ditolak</span>;
       default:
@@ -66,15 +66,15 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted/50-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link href={`/projects/${params.projectId}`} className="mr-3 text-gray-400 hover:text-gray-500">
+            <Link href={`/projects/${params.projectId}`} className="mr-3 text-gray-400 hover:text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <h1 className="text-xl font-medium text-gray-900">Laporan Harian</h1>
+            <h1 className="text-xl font-medium text-foreground">Laporan Harian</h1>
           </div>
         </div>
       </header>
@@ -82,17 +82,17 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tabs Navigation */}
-        <div className="flex border-b border-gray-200 mb-6">
-          <Link href={`/projects/${params.projectId}`} className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
+        <div className="flex border-b border-border-200 mb-6">
+          <Link href={`/projects/${params.projectId}`} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground/80 border-b-2 border-transparent hover:border-border-300">
             Ringkasan
           </Link>
-          <Link href={`/projects/${params.projectId}/milestones`} className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
+          <Link href={`/projects/${params.projectId}/milestones`} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground/80 border-b-2 border-transparent hover:border-border-300">
             Milestone
           </Link>
           <Link href={`/projects/${params.projectId}/daily-reports`} className="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
             Laporan Harian
           </Link>
-          <Link href={`/projects/${params.projectId}/documentation`} className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
+          <Link href={`/projects/${params.projectId}/documentation`} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground/80 border-b-2 border-transparent hover:border-border-300">
             Dokumentasi
           </Link>
         </div>
@@ -106,16 +106,16 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
             <input
               type="text"
               placeholder="Cari laporan..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-64"
+              className="pl-10 pr-4 py-2 border border-border-300 rounded-md bg-card focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-64"
             />
           </div>
           
           <div className="flex space-x-2">
-            <button className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            <button className="inline-flex items-center px-3 py-2 border border-border-300 text-sm font-medium rounded-md bg-card text-foreground/80 hover:bg-muted/50-50">
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </button>
-            <Link href={`/projects/${params.projectId}/daily-reports/new`} className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <Link href={`/projects/${params.projectId}/daily-reports/new`} className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md bg-info-600 text-info-foreground hover:bg-info-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               <Plus className="h-4 w-4 mr-2" />
               Buat Laporan
             </Link>
@@ -123,24 +123,24 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
         </div>
 
         {/* Reports List */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-card rounded-lg shadow-sm border border-border-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-muted/50-50">
                 <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Tanggal
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Status
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Progres
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Dokumentasi
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Penyusun
                   </th>
                   <th scope="col" className="relative px-6 py-3">
@@ -148,15 +148,15 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-card divide-y divide-gray-200">
                 {dailyReports.map((report) => (
-                  <tr key={report.id} className="hover:bg-gray-50">
+                  <tr key={report.id} className="hover:bg-muted/50-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 text-gray-400 mr-2" />
                         <div>
-                          <div className="text-sm font-medium text-gray-900">{report.date}</div>
-                          <div className="text-xs text-gray-500">{report.submitted}</div>
+                          <div className="text-sm font-medium text-foreground">{report.date}</div>
+                          <div className="text-xs text-muted-foreground">{report.submitted}</div>
                         </div>
                       </div>
                     </td>
@@ -164,15 +164,15 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
                       {getStatusBadge(report.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">+{report.progress}%</div>
+                      <div className="text-sm text-foreground">+{report.progress}%</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-900">
+                      <div className="flex items-center text-sm text-foreground">
                         <FileText className="h-4 w-4 text-gray-400 mr-2" />
                         {report.photoCount} foto
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {report.author}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -188,37 +188,37 @@ export default function DailyReportsPage({ params }: { params: { projectId: stri
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between bg-white px-4 py-3 sm:px-6 mt-4 rounded-md shadow-sm border border-gray-100">
+        <div className="flex items-center justify-between bg-card px-4 py-3 sm:px-6 mt-4 rounded-md shadow-sm border border-border-100">
           <div className="flex-1 flex justify-between sm:hidden">
-            <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <button className="relative inline-flex items-center px-4 py-2 border border-border-300 text-sm font-medium rounded-md text-foreground/80 bg-card hover:bg-muted/50-50">
               Sebelumnya
             </button>
-            <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-border-300 text-sm font-medium rounded-md text-foreground/80 bg-card hover:bg-muted/50-50">
               Selanjutnya
             </button>
           </div>
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-foreground/80">
                 Menampilkan <span className="font-medium">1</span> hingga <span className="font-medium">5</span> dari <span className="font-medium">12</span> laporan
               </p>
             </div>
             <div>
               <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-border-300 bg-card text-sm font-medium text-muted-foreground hover:bg-muted/50-50">
                   <span className="sr-only">Sebelumnya</span>
                   <ArrowLeft className="h-5 w-5" />
                 </button>
-                <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-50 text-sm font-medium text-blue-600">
+                <button className="relative inline-flex items-center px-4 py-2 border border-border-300 bg-info-50 text-sm font-medium text-blue-600">
                   1
                 </button>
-                <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button className="relative inline-flex items-center px-4 py-2 border border-border-300 bg-card text-sm font-medium text-muted-foreground hover:bg-muted/50-50">
                   2
                 </button>
-                <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button className="relative inline-flex items-center px-4 py-2 border border-border-300 bg-card text-sm font-medium text-muted-foreground hover:bg-muted/50-50">
                   3
                 </button>
-                <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-border-300 bg-card text-sm font-medium text-muted-foreground hover:bg-muted/50-50">
                   <span className="sr-only">Selanjutnya</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>

@@ -7,15 +7,15 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
   const currentDate = '23 Mar 2025';
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted/50-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link href={`/projects/${params.projectId}/daily-reports`} className="mr-3 text-gray-400 hover:text-gray-500">
+            <Link href={`/projects/${params.projectId}/daily-reports`} className="mr-3 text-gray-400 hover:text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <h1 className="text-xl font-medium text-gray-900">Buat Laporan Harian</h1>
+            <h1 className="text-xl font-medium text-foreground">Buat Laporan Harian</h1>
           </div>
         </div>
       </header>
@@ -25,12 +25,12 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
         <form>
           <div className="space-y-6">
             {/* Basic Info Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h2>
+            <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
+              <h2 className="text-lg font-medium text-foreground mb-4">Informasi Dasar</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground/80 mb-1">
                     Tanggal
                   </label>
                   <div className="flex items-center">
@@ -40,18 +40,18 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
                       </div>
                       <input
                         type="text"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                        className="w-full pl-10 pr-3 py-2 border border-border-300 rounded-md bg-muted/50-50 text-muted-foreground cursor-not-allowed"
                         placeholder="Tanggal"
                         value={currentDate}
                         disabled
                       />
                     </div>
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">Laporan untuk hari ini</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Laporan untuk hari ini</p>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground/80 mb-1">
                     Lokasi
                   </label>
                   <div className="flex items-center">
@@ -61,7 +61,7 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
                       </div>
                       <input
                         type="text"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full pl-10 pr-3 py-2 border border-border-300 rounded-md"
                         placeholder="Masukkan lokasi pekerjaan"
                       />
                     </div>
@@ -70,24 +70,24 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
               </div>
               
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground/80 mb-1">
                   Ringkasan Kegiatan
                 </label>
                 <textarea
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Jelaskan ringkasan kegiatan hari ini..."
                 ></textarea>
               </div>
             </div>
             
             {/* Work Progress Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Progres Pekerjaan</h2>
+            <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
+              <h2 className="text-lg font-medium text-foreground mb-4">Progres Pekerjaan</h2>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground/80 mb-1">
                     Progres Hari Ini (%)
                   </label>
                   <div className="flex items-center">
@@ -95,20 +95,20 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
                       type="number"
                       min="0"
                       max="100"
-                      className="w-full md:w-1/4 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full md:w-1/4 px-3 py-2 border border-border-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="0"
                     />
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">Masukkan persentase kemajuan pekerjaan hari ini</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Masukkan persentase kemajuan pekerjaan hari ini</p>
                 </div>
                 
                 <div>
                   <div className="flex items-start">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground/80 mb-1">
                       Detail Pekerjaan
                     </label>
                     <div className="ml-1 mt-0.5">
-                      <div className="flex items-center text-xs text-gray-500">
+                      <div className="flex items-center text-xs text-muted-foreground">
                         <Info className="h-3 w-3 mr-1" />
                         <span>Tambahkan item pekerjaan yang diselesaikan</span>
                       </div>
@@ -119,12 +119,12 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
                     <div className="flex items-center">
                       <input
                         type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-border-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Masukkan item pekerjaan"
                       />
                       <button
                         type="button"
-                        className="ml-2 p-2 text-gray-400 hover:text-gray-500 focus:outline-none"
+                        className="ml-2 p-2 text-gray-400 hover:text-muted-foreground focus:outline-none"
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
@@ -132,7 +132,7 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
                     
                     <button
                       type="button"
-                      className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white text-gray-700 hover:bg-gray-50"
+                      className="inline-flex items-center px-3 py-2 border border-border-300 text-sm font-medium rounded-md bg-card text-foreground/80 hover:bg-muted/50-50"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Tambah Item
@@ -141,12 +141,12 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground/80 mb-1">
                     Kendala
                   </label>
                   <textarea
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-border-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Jelaskan kendala yang dihadapi (jika ada)..."
                   ></textarea>
                 </div>
@@ -154,53 +154,53 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
             </div>
             
             {/* Photo Documentation Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+            <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-gray-900">Dokumentasi Foto</h2>
-                <span className="text-sm text-gray-500">Min. 3 foto</span>
+                <h2 className="text-lg font-medium text-foreground">Dokumentasi Foto</h2>
+                <span className="text-sm text-muted-foreground">Min. 3 foto</span>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 {/* Photo Upload Box */}
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center hover:border-blue-500 transition-colors">
-                  <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
+                <div className="border-2 border-dashed border-border-300 rounded-lg p-4 flex flex-col items-center justify-center hover:border-blue-500 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-info-50 flex items-center justify-center mb-2">
                     <Camera className="h-6 w-6 text-blue-600" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 mb-1">Peralatan</p>
-                  <p className="text-xs text-gray-500 text-center mb-3">Foto peralatan yang digunakan</p>
+                  <p className="text-sm font-medium text-foreground mb-1">Peralatan</p>
+                  <p className="text-xs text-muted-foreground text-center mb-3">Foto peralatan yang digunakan</p>
                   <button
                     type="button"
-                    className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md bg-info-50 text-info hover:bg-info-100"
                   >
                     <Upload className="h-3 w-3 mr-1" />
                     Upload
                   </button>
                 </div>
                 
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center hover:border-blue-500 transition-colors">
-                  <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
+                <div className="border-2 border-dashed border-border-300 rounded-lg p-4 flex flex-col items-center justify-center hover:border-blue-500 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-info-50 flex items-center justify-center mb-2">
                     <Camera className="h-6 w-6 text-blue-600" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 mb-1">Proses Kerja</p>
-                  <p className="text-xs text-gray-500 text-center mb-3">Foto proses pengerjaan</p>
+                  <p className="text-sm font-medium text-foreground mb-1">Proses Kerja</p>
+                  <p className="text-xs text-muted-foreground text-center mb-3">Foto proses pengerjaan</p>
                   <button
                     type="button"
-                    className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md bg-info-50 text-info hover:bg-info-100"
                   >
                     <Upload className="h-3 w-3 mr-1" />
                     Upload
                   </button>
                 </div>
                 
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center hover:border-blue-500 transition-colors">
-                  <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
+                <div className="border-2 border-dashed border-border-300 rounded-lg p-4 flex flex-col items-center justify-center hover:border-blue-500 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-info-50 flex items-center justify-center mb-2">
                     <Camera className="h-6 w-6 text-blue-600" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 mb-1">Hasil Pekerjaan</p>
-                  <p className="text-xs text-gray-500 text-center mb-3">Foto hasil pekerjaan</p>
+                  <p className="text-sm font-medium text-foreground mb-1">Hasil Pekerjaan</p>
+                  <p className="text-xs text-muted-foreground text-center mb-3">Foto hasil pekerjaan</p>
                   <button
                     type="button"
-                    className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md bg-info-50 text-info hover:bg-info-100"
                   >
                     <Upload className="h-3 w-3 mr-1" />
                     Upload
@@ -210,7 +210,7 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
               
               <button
                 type="button"
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white text-gray-700 hover:bg-gray-50"
+                className="inline-flex items-center px-3 py-2 border border-border-300 text-sm font-medium rounded-md bg-card text-foreground/80 hover:bg-muted/50-50"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Tambah Foto Lainnya
@@ -221,13 +221,13 @@ export default function NewDailyReportPage({ params }: { params: { projectId: st
             <div className="flex justify-end space-x-3">
               <Link
                 href={`/projects/${params.projectId}/daily-reports`}
-                className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-border-300 text-sm font-medium rounded-md bg-card text-foreground/80 hover:bg-muted/50-50"
               >
                 Batal
               </Link>
               <button
                 type="submit"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-info-600 text-info-foreground hover:bg-info-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Simpan Laporan

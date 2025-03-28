@@ -181,11 +181,11 @@ const ProjectDetailPage = () => {
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'not-started':
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">Belum Dimulai</Badge>;
+        return <Badge variant="outline" className="bg-muted/50-100 text-gray-800 hover:bg-muted/50-100">Belum Dimulai</Badge>;
       case 'in-progress':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">Sedang Berjalan</Badge>;
+        return <Badge variant="outline" className="bg-info-100 text-blue-800 hover:bg-info-100">Sedang Berjalan</Badge>;
       case 'completed':
-        return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">Selesai</Badge>;
+        return <Badge variant="outline" className="bg-success-100 text-green-800 hover:bg-success-100">Selesai</Badge>;
       default:
         return null;
     }
@@ -285,7 +285,7 @@ const ProjectDetailPage = () => {
                 </div>
                 
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+                  <div className="h-8 w-8 rounded-full bg-success-100 flex items-center justify-center text-green-600 mr-3">
                     <UserCircle className="h-4 w-4" />
                   </div>
                   <div>
@@ -455,9 +455,9 @@ const ProjectDetailPage = () => {
                 {milestones.map((milestone) => (
                   <div key={milestone.id} className="flex items-start gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
                     <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      milestone.status === 'completed' ? 'bg-green-100' : 
-                      milestone.status === 'in-progress' ? 'bg-blue-100' : 
-                      'bg-gray-100'
+                      milestone.status === 'completed' ? 'bg-success-100' : 
+                      milestone.status === 'in-progress' ? 'bg-info-100' : 
+                      'bg-muted/50-100'
                     }`}>
                       {getStatusIcon(milestone.status)}
                     </div>
@@ -512,7 +512,7 @@ const ProjectDetailPage = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-medium">Laporan Harian - {report.date}</h3>
-                          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                          <Badge className="bg-success-100 text-green-800 hover:bg-success-100">
                             Selesai
                           </Badge>
                         </div>
@@ -573,7 +573,7 @@ const ProjectDetailPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {documents.map((doc) => (
                     <div key={doc.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-all">
-                      <div className={`h-32 bg-muted flex items-center justify-center ${doc.type === 'image' ? 'bg-blue-50' : 'bg-amber-50'}`}>
+                      <div className={`h-32 bg-muted flex items-center justify-center ${doc.type === 'image' ? 'bg-info-50' : 'bg-warning-50'}`}>
                         {doc.type === 'image' ? (
                           <FileText className="h-12 w-12 text-blue-400" />
                         ) : (

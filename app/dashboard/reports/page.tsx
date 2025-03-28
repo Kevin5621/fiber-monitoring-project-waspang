@@ -246,13 +246,13 @@ const ReportsPage = () => {
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'approved':
-        return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">Disetujui</Badge>;
+        return <Badge variant="outline" className="bg-success-100 text-green-800 hover:bg-success-100">Disetujui</Badge>;
       case 'in-review':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">Dalam Peninjauan</Badge>;
+        return <Badge variant="outline" className="bg-info-100 text-blue-800 hover:bg-info-100">Dalam Peninjauan</Badge>;
       case 'rejected':
         return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">Ditolak</Badge>;
       case 'draft':
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">Draft</Badge>;
+        return <Badge variant="outline" className="bg-muted/50-100 text-gray-800 hover:bg-muted/50-100">Draft</Badge>;
       default:
         return null;
     }

@@ -69,11 +69,11 @@ const MilestoneDetailPage = ({
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'not-started':
-        return <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Belum Dimulai</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-muted/50-100 text-gray-800">Belum Dimulai</span>;
       case 'in-progress':
-        return <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Sedang Berjalan</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-info-100 text-blue-800">Sedang Berjalan</span>;
       case 'completed':
-        return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Selesai</span>;
+        return <span className="px-2 py-1 text-xs rounded-full bg-success-100 text-green-800">Selesai</span>;
       default:
         return null;
     }
@@ -82,15 +82,15 @@ const MilestoneDetailPage = ({
   const getDocStatusIcon = (status: string) => {
     switch(status) {
       case 'completed': 
-        return <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+        return <div className="h-6 w-6 rounded-full bg-success-100 flex items-center justify-center text-green-600">
           <Check className="h-4 w-4" />
         </div>;
       case 'in-progress':
-        return <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+        return <div className="h-6 w-6 rounded-full bg-info-100 flex items-center justify-center text-blue-600">
           <FileText className="h-4 w-4" />
         </div>;
       case 'not-started':
-        return <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+        return <div className="h-6 w-6 rounded-full bg-muted/50-100 flex items-center justify-center text-gray-400">
           <PlusCircle className="h-4 w-4" />
         </div>;
       default:
@@ -99,17 +99,17 @@ const MilestoneDetailPage = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted/50-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-card shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link href={`/projects/${milestone.project.id}/milestones`} className="mr-4 text-gray-400 hover:text-gray-500">
+            <Link href={`/projects/${milestone.project.id}/milestones`} className="mr-4 text-gray-400 hover:text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex-1">
-              <h1 className="text-xl font-medium text-gray-900">{milestone.name}</h1>
-              <p className="text-sm text-gray-500">{milestone.project.name}</p>
+              <h1 className="text-xl font-medium text-foreground">{milestone.name}</h1>
+              <p className="text-sm text-muted-foreground">{milestone.project.name}</p>
             </div>
             <div>
               {getStatusBadge(milestone.status)}
@@ -124,14 +124,14 @@ const MilestoneDetailPage = ({
           {/* Left column - Milestone details */}
           <div className="lg:col-span-2 space-y-8">
             {/* Overview Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Detail Milestone</h2>
+            <div className="bg-card rounded-lg shadow-sm border border-border-100 overflow-hidden p-6">
+              <h2 className="text-lg font-medium text-foreground mb-4">Detail Milestone</h2>
               
               <div className="flex flex-col space-y-4">
                 <div className="flex items-start">
                   <Calendar className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Jadwal Pelaksanaan</p>
+                    <p className="text-sm font-medium text-foreground/80">Jadwal Pelaksanaan</p>
                     <p className="text-sm text-gray-600">{milestone.date}</p>
                   </div>
                 </div>
@@ -139,7 +139,7 @@ const MilestoneDetailPage = ({
                 <div className="flex items-start">
                   <FileText className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Deskripsi</p>
+                    <p className="text-sm font-medium text-foreground/80">Deskripsi</p>
                     <p className="text-sm text-gray-600">{milestone.description}</p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ const MilestoneDetailPage = ({
                 <div className="flex items-start">
                   <PlusCircle className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Catatan</p>
+                    <p className="text-sm font-medium text-foreground/80">Catatan</p>
                     <p className="text-sm text-gray-600">{milestone.notes}</p>
                   </div>
                 </div>
@@ -155,7 +155,7 @@ const MilestoneDetailPage = ({
                 <div className="flex items-start">
                   <Clock className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Terakhir Diperbarui</p>
+                    <p className="text-sm font-medium text-foreground/80">Terakhir Diperbarui</p>
                     <p className="text-sm text-gray-600">{milestone.lastUpdated}</p>
                   </div>
                 </div>
@@ -163,12 +163,12 @@ const MilestoneDetailPage = ({
               
               <div className="mt-6">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-500">Progres Keseluruhan</span>
-                  <span className="text-sm font-medium text-gray-700">{milestone.progress}%</span>
+                  <span className="text-sm text-muted-foreground">Progres Keseluruhan</span>
+                  <span className="text-sm font-medium text-foreground/80">{milestone.progress}%</span>
                 </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-muted/50-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-blue-600 rounded-full"
+                    className="h-full bg-info-600 rounded-full"
                     style={{ width: `${milestone.progress}%` }}
                   ></div>
                 </div>
@@ -177,19 +177,19 @@ const MilestoneDetailPage = ({
             
             {/* Documentation Requirements */}
             <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Kebutuhan Dokumentasi</h2>
+              <h2 className="text-lg font-medium text-foreground mb-4">Kebutuhan Dokumentasi</h2>
               
               {milestone.requiredDocs.map((doc, index) => (
                 <div 
                   key={doc.id} 
-                  className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-4"
+                  className="bg-card rounded-lg shadow-sm border border-border-100 overflow-hidden mb-4"
                 >
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-start">
                         {getDocStatusIcon(doc.status)}
                         <div className="ml-3">
-                          <h3 className="text-base font-medium text-gray-900">{doc.name}</h3>
+                          <h3 className="text-base font-medium text-foreground">{doc.name}</h3>
                           <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
                         </div>
                       </div>
@@ -199,9 +199,9 @@ const MilestoneDetailPage = ({
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 text-gray-400 mr-1" />
-                        <span className="text-sm text-gray-500">Deadline: {doc.deadline}</span>
+                        <span className="text-sm text-muted-foreground">Deadline: {doc.deadline}</span>
                       </div>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-muted-foreground">
                         Upload: {doc.uploaded}/{doc.required} foto
                       </span>
                     </div>
@@ -217,23 +217,23 @@ const MilestoneDetailPage = ({
                                 className="h-24 w-full object-cover rounded-md"
                               />
                               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                <Download className="h-5 w-5 text-white" />
+                                <Download className="h-5 w-5 text-info-foreground" />
                               </div>
-                              <p className="text-xs text-gray-500 mt-1 truncate">{upload.name}</p>
+                              <p className="text-xs text-muted-foreground mt-1 truncate">{upload.name}</p>
                             </div>
                           ))}
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center h-24 bg-gray-50 rounded-md mb-4">
-                        <div className="text-center text-gray-500">
+                      <div className="flex items-center justify-center h-24 bg-muted/50-50 rounded-md mb-4">
+                        <div className="text-center text-muted-foreground">
                           <Camera className="h-6 w-6 mx-auto mb-1" />
                           <p className="text-sm">Belum ada foto diunggah</p>
                         </div>
                       </div>
                     )}
                     
-                    <button className="w-full py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button className="w-full py-2 px-4 border border-border-300 shadow-sm text-sm font-medium rounded-md text-foreground/80 bg-card hover:bg-muted/50-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                       <div className="flex items-center justify-center">
                         <Upload className="h-4 w-4 mr-2" />
                         <span>Upload Foto Dokumentasi</span>
@@ -247,26 +247,26 @@ const MilestoneDetailPage = ({
           
           {/* Right sidebar - Activity log */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6 sticky top-8">
-              <h2 className="text-lg font-medium text-gray-900 mb-6">Aktivitas Milestone</h2>
+            <div className="bg-card rounded-lg shadow-sm border border-border-100 overflow-hidden p-6 sticky top-8">
+              <h2 className="text-lg font-medium text-foreground mb-6">Aktivitas Milestone</h2>
               
               <div className="space-y-6">
                 {milestone.activities.map((activity, index) => (
                   <div key={index} className="relative">
                     {/* Timeline dot and line */}
-                    <div className="absolute left-0 w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
+                    <div className="absolute left-0 w-2 h-2 rounded-full bg-info-500 mt-1.5"></div>
                     {index < milestone.activities.length - 1 && (
-                      <div className="absolute left-1 top-3 bottom-0 w-px bg-gray-200 h-12"></div>
+                      <div className="absolute left-1 top-3 bottom-0 w-px bg-muted/50-200 h-12"></div>
                     )}
                     
                     {/* Content */}
                     <div className="ml-6">
-                      <p className="text-sm text-gray-900">{activity.action}</p>
+                      <p className="text-sm text-foreground">{activity.action}</p>
                       <div className="flex items-center mt-1">
                         <Clock className="h-3 w-3 text-gray-400 mr-1" />
-                        <span className="text-xs text-gray-500">{activity.time}</span>
+                        <span className="text-xs text-muted-foreground">{activity.time}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">{activity.user}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{activity.user}</p>
                     </div>
                   </div>
                 ))}
