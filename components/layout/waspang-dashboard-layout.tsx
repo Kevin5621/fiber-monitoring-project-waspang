@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import Header from '@/components/ui/header';
 import Sidebar from '@/components/ui/sidebardashboard';
 import { useState, createContext } from 'react';
+import Link from 'next/link';
+import { LayoutDashboard, FolderIcon, CalendarIcon, Archive, Settings } from 'lucide-react';
 
 // Create context for sidebar state
 export const SidebarContext = createContext({
@@ -22,7 +24,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const isLoginPage = pathname === '/';
   
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
 
   const toggleSidebar = () => {
@@ -31,6 +33,36 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const toggleMinimized = () => {
     setMinimized(!minimized);
+  };
+
+  // Navigation items for mobile bottom bar
+  const navItems = [
+    {
+      icon: <LayoutDashboard size={20} />,
+      text: "Dashboard",
+      href: "/dashboard"
+    },
+    {
+      icon: <FolderIcon size={20} />,
+      text: "Projek",
+      href: "/dashboard/project"
+    },
+    {
+      icon: <CalendarIcon size={20} />,
+      text: "Laporan",
+      href: "/dashboard/reports"
+    },
+    {
+      icon: <Archive size={20} />,
+      text: "Dokumen",
+      href: "/dashboard/documentation"
+    },
+  ];
+
+  const isPathActive = (itemPath: string) => {
+    if (pathname === itemPath) return true;
+    if (itemPath !== '/dashboard' && pathname.startsWith(itemPath)) return true;
+    return false;
   };
 
   // If we're on the login page, just render the children without the layout
@@ -56,9 +88,34 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
 
           {/* Page Content */}
-          <main className="flex-1 overflow-auto">
-            {children}
+          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 pb-20 md:pb-8">
+            <div className="mx-auto max-w-7xl">
+              {children}
+            </div>
           </main>
+          
+          {/* Mobile Bottom Navigation */}
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-20">
+            <div className="flex justify-between items-center">
+              {navItems.map((item, index) => {
+                const isActive = isPathActive(item.href);
+                return (
+                  <Link 
+                    key={index} 
+                    href={item.href} 
+                    className={`flex flex-1 flex-col items-center py-2 px-1 ${
+                      isActive ? 'text-primary' : 'text-muted-foreground'
+                    }`}
+                  >
+                    <div className={`p-1 ${isActive ? 'bg-primary/10 rounded-md' : ''}`}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs mt-1 truncate">{item.text}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </SidebarContext.Provider>
