@@ -101,9 +101,6 @@ const DashboardPage = () => {
           <TabsContent value="milestones" className="pt-2">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold">Timeline Milestone</h3>
-              <Link href="/dashboard/milestones" className="text-sm text-primary flex items-center hover:underline">
-                Lihat Semua <ChevronRight className="h-4 w-4" />
-              </Link>
             </div>
             
             {/* Milestone Timeline Chart */}
