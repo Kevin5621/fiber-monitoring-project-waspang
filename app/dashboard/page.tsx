@@ -1,138 +1,51 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, FileText, Folder, ChevronRight, Upload, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, FileText, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { MilestoneChart } from '@/components/dashboard/MilestoneChart';
+import { StatCard } from '@/components/dashboard/StatCard';
+import { PriorityTaskCard } from '@/components/dashboard/PriorityTaskCard';
+import { MilestoneCard } from '@/components/dashboard/MilestoneCard';
+import { DocumentCard } from '@/components/dashboard/DocumentCard';
+import { ActivityItem } from '@/components/dashboard/ActivityItem';
+import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
+import { mockData } from '@/data/dashboardData';
+import { StatProps, PriorityTaskProps, MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
+
+// Define the dashboard data type
+interface DashboardData {
+  priorityTasks: PriorityTaskProps['task'][];
+  stats: StatProps[];
+  milestones: MilestoneProps['milestone'][];
+  documents: DocumentProps['doc'][];
+  activities: ActivityProps['activity'][];
+}
 
 const DashboardPage = () => {
-  // State for real-time date
-  const [currentDate, setCurrentDate] = useState(new Date());
-
-  // Update date every second
+  // State to hold dashboard data with proper typing
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  // Use custom hook for date/time formatting
+  const { currentDate, formattedDate, formattedTime } = useDateTimeFormatter();
+  
+  // Initialize dashboard data on client-side only
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
+    const data = mockData(currentDate);
+    setDashboardData(data);
+  }, [currentDate]);
 
-    return () => clearInterval(timer);
-  }, []);
+  // Return loading state if data isn't ready
+  if (!dashboardData) {
+    return <div className="container mx-auto p-6">Loading dashboard...</div>;
+  }
 
-  // Format current date
-  const formattedDate = currentDate.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-
-  // Format current time
-  const formattedTime = currentDate.toLocaleTimeString('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-
-  // Sample data 
-  const priorityTasks = [
-    { 
-      title: 'Pemasangan Kabel', 
-      project: 'Fiber Optik Tebet', 
-      progress: 45, 
-      deadline: '3 hari tersisa', 
-      badge: 'Tenggat Hari Ini', 
-      badgeVariant: 'destructive' as const
-    },
-    { 
-      title: 'Buat Laporan Harian', 
-      project: currentDate.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      }), 
-      badge: 'Segera', 
-      badgeVariant: 'default' as const
-    },
-    { 
-      title: 'Foto Pemasangan Kabel', 
-      project: 'Fiber Optik Tebet', 
-      badge: 'Dokumentasi', 
-      badgeVariant: 'outline' as const
-    }
-  ];
-
-  const stats = [
-    { 
-      title: 'Proyek Aktif', 
-      value: '3', 
-      icon: <Folder className="h-5 w-5" />, 
-      color: 'primary',
-    },
-    { 
-      title: 'Milestone', 
-      value: '2', 
-      icon: <Clock className="h-5 w-5" />, 
-      color: 'warning',
-    },
-    { 
-      title: 'Dokumentasi Tertunda', 
-      value: '5', 
-      icon: <FileText className="h-5 w-5" />, 
-      color: 'destructive',
-    }
-  ];
-
-  const milestones = [
-    { 
-      name: 'Persiapan Alat', 
-      project: 'Fiber Optik Jl. Sudirman', 
-      deadline: currentDate.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      }), 
-      status: 'Pada Jadwal',
-      icon: <CheckCircle className="h-4 w-4" />
-    },
-    { 
-      name: 'Pemasangan Kabel', 
-      project: 'Fiber Optik Tebet', 
-      deadline: '28 Mar 2025', 
-      status: 'Terlambat',
-      icon: <AlertCircle className="h-4 w-4" />
-    },
-    { 
-      name: 'Dokumentasi Penutupan', 
-      project: 'Fiber Optik Kemang', 
-      deadline: '01 Apr 2025', 
-      status: 'Pada Jadwal',
-      icon: <CheckCircle className="h-4 w-4" />
-    }
-  ];
-
-  const documents = [
-    { 
-      name: 'Foto Pemasangan Kabel', 
-      project: 'Fiber Optik Tebet', 
-      deadline: currentDate.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      }) 
-    },
-    { name: 'Foto Label Kabel', project: 'Fiber Optik Sudirman', deadline: '30 Mar 2025' },
-    { name: 'Foto Penutupan Galian', project: 'Fiber Optik Kemang', deadline: '01 Apr 2025' }
-  ];
-
-  const activities = [
-    { action: 'Upload foto pemasangan', time: '2 jam lalu', project: 'Fiber Optik Kemang' },
-    { action: 'Laporan harian dikirim', time: 'Kemarin, 16:32', project: 'Fiber Optik Sudirman' },
-    { action: 'Milestone selesai', time: 'Kemarin, 10:15', project: 'Fiber Optik Menteng' }
-  ];
+  // Destructure data after it's available
+  const { priorityTasks, stats, milestones, documents, activities } = dashboardData;
 
   return (
     <div className="container mx-auto p-6">
@@ -158,20 +71,8 @@ const DashboardPage = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        {stats.map((stat, i) => (
-          <Card key={i} className="shadow hover:shadow-md transition-all duration-200">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-3">
-                <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-${stat.color}/10 flex items-center justify-center`}>
-                  {React.cloneElement(stat.icon, { className: `text-${stat.color} h-5 w-5` })}
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground">{stat.title}</p>
-                  <h3 className="text-xl font-bold">{stat.value}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {stats.map((stat: StatProps, i: number) => (
+          <StatCard key={i} stat={stat} />
         ))}
       </div>
 
@@ -179,47 +80,8 @@ const DashboardPage = () => {
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Prioritas Hari Ini</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {priorityTasks.map((task, i) => (
-            <Card key={i} className="transition-all duration-200 hover:shadow-md">
-              <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                <Badge variant={task.badgeVariant}>{task.badge}</Badge>
-                <span className="text-xs text-muted-foreground font-medium">{task.deadline || 'Segera'}</span>
-              </CardHeader>
-              <CardContent className="p-4 pt-2">
-                <h4 className="font-medium text-base">{task.title}</h4>
-                <p className="text-sm text-muted-foreground">{task.project}</p>
-                {task.progress !== undefined && (
-                  <div className="mt-3">
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{task.progress}%</span>
-                    </div>
-                    <Progress value={task.progress} className="h-2" />
-                  </div>
-                )}
-              </CardContent>
-              {task.title === 'Buat Laporan Harian' && (
-                <CardFooter className="p-4 pt-0">
-                  <Button size="sm" className="w-full">
-                    Buat Sekarang
-                  </Button>
-                </CardFooter>
-              )}
-              {task.title === 'Foto Pemasangan Kabel' && (
-                <CardFooter className="p-4 pt-0">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Upload className="h-4 w-4 mr-2" /> Upload
-                  </Button>
-                </CardFooter>
-              )}
-              {task.title === 'Pemasangan Kabel' && (
-                <CardFooter className="p-4 pt-0">
-                  <Button variant="secondary" size="sm" className="w-full">
-                    Lihat Detail
-                  </Button>
-                </CardFooter>
-              )}
-            </Card>
+          {priorityTasks.map((task: PriorityTaskProps['task'], i: number) => (
+            <PriorityTaskCard key={i} task={task} />
           ))}
         </div>
       </div>
@@ -228,8 +90,8 @@ const DashboardPage = () => {
       <div className="mb-8">
         <Tabs defaultValue="milestones" className="w-full">
           <div className="border-b mb-6">
-          <TabsList className="grid grid-cols-3 w-full">
-            <TabsTrigger value="milestones">Milestone</TabsTrigger>
+            <TabsList className="grid grid-cols-3 w-full">
+              <TabsTrigger value="milestones">Milestone</TabsTrigger>
               <TabsTrigger value="reports">Laporan</TabsTrigger>
               <TabsTrigger value="docs">Dokumentasi</TabsTrigger>
             </TabsList>
@@ -238,37 +100,36 @@ const DashboardPage = () => {
           {/* Milestones Tab */}
           <TabsContent value="milestones" className="pt-2">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold">Milestone Aktif</h3>
+              <h3 className="text-xl font-semibold">Timeline Milestone</h3>
               <Link href="/dashboard/milestones" className="text-sm text-primary flex items-center hover:underline">
                 Lihat Semua <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
             
+            {/* Milestone Timeline Chart */}
+            <Card className="mb-8 transition-all duration-200 hover:shadow-lg">
+              <CardContent className="p-6">
+                <div className="overflow-x-auto">
+                  <MilestoneChart milestones={milestones} />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Milestone Aktif</h3>
+              <div className="flex gap-2">
+                <Badge variant="outline" className="bg-primary/10">
+                  <CheckCircle className="h-3 w-3 mr-1" /> Pada Jadwal
+                </Badge>
+                <Badge variant="outline" className="bg-destructive/10 text-destructive">
+                  <AlertCircle className="h-3 w-3 mr-1" /> Terlambat
+                </Badge>
+              </div>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {milestones.map((milestone, i) => (
-                <Card key={i} className="transition-all duration-200 hover:shadow-lg border-l-4 border-l-primary">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${
-                        milestone.status === 'Terlambat' 
-                          ? 'bg-destructive/10 text-destructive' 
-                          : 'bg-primary/10 text-primary'
-                      }`}>
-                        {React.cloneElement(milestone.icon, { className: "h-5 w-5" })}
-                      </div>
-                      <div className="flex-grow">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-lg">{milestone.name}</h4>
-                          <Badge variant={milestone.status === 'Terlambat' ? 'destructive' : 'outline'}>
-                            {milestone.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{milestone.project}</p>
-                        <p className="text-xs text-muted-foreground mt-2">Tenggat: {milestone.deadline}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {milestones.slice(0, 3).map((milestone, i) => (
+                <MilestoneCard key={i} milestone={milestone} />
               ))}
             </div>
           </TabsContent>
@@ -339,28 +200,7 @@ const DashboardPage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {documents.map((doc, i) => (
-                <Card key={i} className="transition-all duration-200 hover:shadow-lg border-l-4 border-l-destructive">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 h-12 w-12 bg-destructive/10 rounded-lg flex items-center justify-center">
-                        <FileText className="h-6 w-6 text-destructive" />
-                      </div>
-                      <div className="flex-grow">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-lg">{doc.name}</h4>
-                          <Badge variant="destructive">Diperlukan</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{doc.project}</p>
-                        <p className="text-xs text-destructive mt-2">Tenggat: {doc.deadline}</p>
-                        
-                        <Button variant="outline" className="w-full mt-4 flex items-center justify-center">
-                          <Upload className="h-4 w-4 mr-2" />
-                          Upload Sekarang
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <DocumentCard key={i} doc={doc} />
               ))}
             </div>
           </TabsContent>
@@ -380,14 +220,7 @@ const DashboardPage = () => {
           <CardContent className="p-6">
             <ul className="divide-y divide-border">
               {activities.map((activity, i) => (
-                <li key={i} className="py-4 first:pt-0 last:pb-0">
-                  <div className="flex items-start border-l-2 border-primary pl-4">
-                    <div>
-                      <p className="text-sm font-medium">{activity.action}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{activity.time} • {activity.project}</p>
-                    </div>
-                  </div>
-                </li>
+                <ActivityItem key={i} activity={activity} />
               ))}
             </ul>
           </CardContent>
