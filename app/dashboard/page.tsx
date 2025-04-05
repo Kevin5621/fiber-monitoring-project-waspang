@@ -51,6 +51,33 @@ const DashboardPage = () => {
     }));
   };
 
+  const handleAddDocument = (name: string, milestoneId: string) => {
+    if (!dashboardData) return;
+    
+    // Find the milestone by ID
+    const milestone = dashboardData.milestones.find(m => m.id.toString() === milestoneId);
+    
+    if (!milestone) {
+      alert('Milestone dengan ID tersebut tidak ditemukan');
+      return;
+    }
+    
+    // Create a new document
+    const newDocument = {
+      name,
+      project: milestone.project,
+      deadline: milestone.deadline
+    };
+    
+    // Update the dashboard data with the new document
+    setDashboardData({
+      ...dashboardData,
+      documents: [...dashboardData.documents, newDocument]
+    });
+    
+    alert(`Dokumen "${name}" berhasil ditambahkan ke milestone "${milestone.name}"`);
+  };
+
   return (
     <div className="container mx-auto p-4 sm:p-6">
       {/* Header with Date and Time */}
@@ -183,6 +210,7 @@ const DashboardPage = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <DocumentCard isAddCard onAddDocument={handleAddDocument} />
               {documents.map((doc, i) => (
                 <DocumentCard key={i} doc={doc} />
               ))}

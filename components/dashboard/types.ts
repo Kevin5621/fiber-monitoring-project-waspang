@@ -20,11 +20,13 @@ export interface MilestoneProps {
 
 // Document Types
 export interface DocumentProps {
-  doc: {
+  doc?: {
     name: string;
     project: string;
     deadline: string;
   };
+  isAddCard?: boolean;
+  onAddDocument?: (name: string, milestoneId: string) => void;
 }
 
 // Activity Types
