@@ -15,11 +15,6 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -34,6 +29,8 @@ import {
 } from "@/components/ui/tabs";
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { dailyReports } from '@/data/project/reports';
+import { projects } from '@/data/project/projects';
 
 const ReportsPage = () => {
   const [filterProject, setFilterProject] = useState('all');
@@ -42,176 +39,8 @@ const ReportsPage = () => {
   const [filterDate, setFilterDate] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
   
-  // Data laporan harian
-  const reports = [
-    { 
-      id: 1, 
-      title: 'Laporan Harian - Penggalian Jalur Kabel',
-      project: 'Fiber Optik Jl. Sudirman',
-      projectId: 1,
-      date: '15 Mar 2025',
-      submittedBy: 'Ahmad Rizal',
-      submittedAt: '19:30',
-      status: 'approved',
-      progress: 100,
-      activities: [
-        'Penggalian jalur kabel sepanjang 500m',
-        'Pemasangan pipa pelindung kabel',
-        'Koordinasi dengan Dinas PUPR'
-      ],
-      issues: [
-        'Terkendala hujan selama 2 jam',
-        'Terdapat jalur pipa PDAM yang tidak sesuai peta'
-      ],
-      nextPlan: 'Melanjutkan penggalian sampai Jl. Thamrin'
-    },
-    { 
-      id: 2, 
-      title: 'Laporan Harian - Penarikan Kabel',
-      project: 'Fiber Optik Jl. Sudirman',
-      projectId: 1,
-      date: '16 Mar 2025',
-      submittedBy: 'Ahmad Rizal',
-      submittedAt: '18:45',
-      status: 'approved',
-      progress: 100,
-      activities: [
-        'Penarikan kabel fiber optik sepanjang 300m',
-        'Penyambungan kabel di distribution point',
-        'Pengujian awal transmisi'
-      ],
-      issues: [
-        'Keterlambatan pengiriman konektor'
-      ],
-      nextPlan: 'Melanjutkan penarikan kabel sampai titik akhir'
-    },
-    { 
-      id: 3, 
-      title: 'Laporan Harian - Terminasi Kabel',
-      project: 'Fiber Optik Jl. Sudirman',
-      projectId: 1,
-      date: '17 Mar 2025',
-      submittedBy: 'Rudi Hartono',
-      submittedAt: '20:10',
-      status: 'in-review',
-      progress: 80,
-      activities: [
-        'Terminasi kabel di ODP',
-        'Instalasi splitter',
-        'Pengujian koneksi'
-      ],
-      issues: [
-        'Beberapa konektor rusak dan perlu diganti'
-      ],
-      nextPlan: 'Pengujian menyeluruh dan perapihan instalasi'
-    },
-    { 
-      id: 4, 
-      title: 'Laporan Harian - Penggalian',
-      project: 'Fiber Optik Tebet',
-      projectId: 2,
-      date: '14 Mar 2025',
-      submittedBy: 'Dewi Putri',
-      submittedAt: '19:15',
-      status: 'approved',
-      progress: 100,
-      activities: [
-        'Penggalian jalur kabel sepanjang 400m',
-        'Pemasangan pipa pelindung'
-      ],
-      issues: [
-        'Terkendala izin warga setempat'
-      ],
-      nextPlan: 'Melanjutkan penggalian ke area berikutnya'
-    },
-    { 
-      id: 5, 
-      title: 'Laporan Harian - Instalasi ODP',
-      project: 'Fiber Optik Tebet',
-      projectId: 2,
-      date: '16 Mar 2025',
-      submittedBy: 'Bambang Kusumo',
-      submittedAt: '17:30',
-      status: 'in-review',
-      progress: 85,
-      activities: [
-        'Instalasi 5 unit ODP',
-        'Perapihan kabel di tiang'
-      ],
-      issues: [
-        'Terdapat 1 unit ODP yang rusak'
-      ],
-      nextPlan: 'Penggantian ODP yang rusak dan pengujian'
-    },
-    { 
-      id: 6, 
-      title: 'Laporan Harian - Survey Lokasi',
-      project: 'Fiber Optik Kemang',
-      projectId: 3,
-      date: '03 Mar 2025',
-      submittedBy: 'Ahmad Rizal',
-      submittedAt: '16:45',
-      status: 'approved',
-      progress: 100,
-      activities: [
-        'Survey lokasi pemasangan',
-        'Pengukuran jarak dan plotting titik ODP',
-        'Koordinasi dengan RT/RW setempat'
-      ],
-      issues: [
-        'Beberapa titik perlu diubah karena medan sulit'
-      ],
-      nextPlan: 'Finalisasi desain jaringan'
-    },
-    { 
-      id: 7, 
-      title: 'Laporan Harian - Perapihan Kabel',
-      project: 'Fiber Optik Kemang',
-      projectId: 3,
-      date: '19 Mar 2025',
-      submittedBy: 'Siti Nuraini',
-      submittedAt: '18:00',
-      status: 'rejected',
-      progress: 30,
-      activities: [
-        'Perapihan kabel di tiang',
-        'Pelabelan kabel'
-      ],
-      issues: [
-        'Banyak kabel lama yang tidak teridentifikasi',
-        'Kurangnya tenaga kerja'
-      ],
-      nextPlan: 'Melanjutkan perapihan dan pelabelan kabel'
-    },
-    { 
-      id: 8, 
-      title: 'Laporan Harian - Testing',
-      project: 'Fiber Optik Kemang',
-      projectId: 3,
-      date: '22 Mar 2025',
-      submittedBy: 'Bambang Kusumo',
-      submittedAt: '19:45',
-      status: 'draft',
-      progress: 20,
-      activities: [
-        'Pengujian kualitas transmisi',
-        'Pengukuran loss pada sambungan'
-      ],
-      issues: [
-        'Beberapa titik memiliki loss yang tinggi'
-      ],
-      nextPlan: 'Perbaikan sambungan dengan loss tinggi'
-    }
-  ];
-
-  // Data proyek untuk filter
-  const projects = [
-    { id: 1, name: 'Fiber Optik Jl. Sudirman' },
-    { id: 2, name: 'Fiber Optik Tebet' },
-    { id: 3, name: 'Fiber Optik Kemang' },
-    { id: 4, name: 'Instalasi Fiber BSD' },
-    { id: 5, name: 'Jaringan Fiber Menteng' }
-  ];
+  // Use centralized data from reports.ts
+  const reports = dailyReports;
 
   // Filter laporan berdasarkan tanggal, proyek, status, dan pencarian
   const filteredReports = reports
@@ -579,4 +408,4 @@ const ReportsPage = () => {
   );
 };
 
-export default ReportsPage; 
+export default ReportsPage;

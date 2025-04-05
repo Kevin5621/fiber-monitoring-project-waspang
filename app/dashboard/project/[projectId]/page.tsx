@@ -8,7 +8,6 @@ import {
   Calendar, 
   Clock, 
   FileText, 
-  MapPin, 
   MoreHorizontal, 
   UserCircle, 
   Plus, 
@@ -18,7 +17,7 @@ import {
   Upload,
   Search
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -31,161 +30,77 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { projects } from '@/data/project/projects';
+import { milestones } from '@/data/project/milestones';
+import { dailyReports } from '@/data/project/reports';
+import { documents } from '@/data/project/documents';
+import { activities } from '@/data/project/activities';
 
 const ProjectDetailPage = () => {
   const params = useParams();
-  const projectId = params.projectId;
+  const projectId = Number(params.projectId);
   const [activeTab, setActiveTab] = useState('overview');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Sample project data
-  const project = {
-    id: 1,
-    name: 'Instalasi Fiber Optik Sudirman',
-    location: 'Jl. Jendral Sudirman, Jakarta Pusat',
-    startDate: '10 Mar 2025',
-    endDate: '15 Apr 2025',
-    status: 'in-progress',
-    progress: 68,
-    description: 'Proyek pemasangan jaringan fiber optik di sepanjang Jalan Sudirman dengan total panjang kabel 2.5 km dan 15 titik penggalian.',
+  // Get project data from centralized data
+  const project = projects.find(p => p.id === projectId) || {
+    id: 0,
+    name: 'Project Not Found',
+    location: 'Unknown',
+    startDate: '-',
+    endDate: '-',
+    status: 'not-started' as const,
+    progress: 0,
+    milestones: 0,
+    completedMilestones: 0,
+    pendingDocuments: 0,
+    description: 'Project not found in the database.'
+  };
+
+  // Get project milestones from centralized data
+  const projectMilestones = milestones.filter(m => m.projectId === projectId);
+  
+  // Get project reports from centralized data
+  const projectReports = dailyReports.filter(r => r.projectId === projectId);
+  
+  // Get project documents from centralized data
+  const projectDocuments = documents.filter(d => d.projectId === projectId);
+  
+  // Get project activities from centralized data
+  const projectActivities = activities.filter(a => a.projectId === projectId);
+
+  // Sample team data (this would come from a users database in a real app)
+  const team = {
     pm: 'Budi Santoso',
     admin: 'Dewi Putri',
     waspang: 'Ahmad Rizal'
   };
 
-  // Sample milestones data
-  const milestones = [
-    { 
-      id: 1, 
-      name: 'Persiapan Alat dan Material',
-      deadline: '15 Mar 2025',
-      completedDate: '14 Mar 2025',
-      status: 'completed',
-      progress: 100,
-      assignee: 'Ahmad Rizal'
-    },
-    { 
-      id: 2, 
-      name: 'Penggalian Jalur Kabel',
-      deadline: '20 Mar 2025',
-      completedDate: '19 Mar 2025',
-      status: 'completed',
-      progress: 100,
-      assignee: 'Tim Penggalian' 
-    },
-    { 
-      id: 3, 
-      name: 'Pemasangan Kabel Feeder',
-      deadline: '25 Mar 2025',
-      completedDate: null,
-      status: 'in-progress',
-      progress: 75,
-      assignee: 'Tim Instalasi'
-    },
-    { 
-      id: 4, 
-      name: 'Pemasangan ODP',
-      deadline: '01 Apr 2025',
-      completedDate: null,
-      status: 'in-progress',
-      progress: 40,
-      assignee: 'Tim Instalasi'
-    },
-    { 
-      id: 5, 
-      name: 'Testing dan Commissioning',
-      deadline: '10 Apr 2025',
-      completedDate: null,
-      status: 'not-started',
-      progress: 0,
-      assignee: 'Tim Teknikal'
-    }
-  ];
-
-  // Sample reports data
-  const reports = [
-    {
-      id: 1,
-      date: '20 Mar 2025',
-      submittedBy: 'Ahmad Rizal',
-      status: 'completed',
-      activities: [
-        'Pemasangan kabel feeder 350m dari OLT ke ODP-01',
-        'Konfigurasi junction box di 3 titik',
-        'Setup peralatan instalasi untuk hari berikutnya'
-      ],
-      materials: [
-        { name: 'Kabel Fiber 24 Core', quantity: '350m' },
-        { name: 'Junction Box', quantity: '3 pcs' },
-        { name: 'Klem Kabel', quantity: '15 pcs' }
-      ],
-      issues: 'Sempat terjadi keterlambatan material selama 30 menit'
-    },
-    {
-      id: 2,
-      date: '19 Mar 2025',
-      submittedBy: 'Ahmad Rizal',
-      status: 'completed',
-      activities: [
-        'Penggalian selesai untuk seluruh jalur 2.5km',
-        'Pemasangan pipa pelindung di area perempatan',
-        'Koordinasi dengan petugas lalin untuk pengaturan jalan'
-      ],
-      materials: [
-        { name: 'Pipa HDPE', quantity: '50m' },
-        { name: 'Pasir', quantity: '2 truk' }
-      ],
-      issues: 'Hujan deras sempat menghambat pekerjaan selama 2 jam'
-    }
-  ];
-
-  // Sample documents data
-  const documents = [
-    {
-      id: 1,
-      name: 'Foto Penggalian.jpg',
-      type: 'image',
-      date: '19 Mar 2025',
-      uploadedBy: 'Ahmad Rizal',
-      size: '2.5 MB'
-    },
-    {
-      id: 2,
-      name: 'Laporan Progres Minggu 1.pdf',
-      type: 'document',
-      date: '17 Mar 2025',
-      uploadedBy: 'Budi Santoso',
-      size: '1.2 MB'
-    },
-    {
-      id: 3,
-      name: 'Foto Pemasangan Kabel.jpg',
-      type: 'image',
-      date: '20 Mar 2025',
-      uploadedBy: 'Ahmad Rizal',
-      size: '3.1 MB'
-    },
-    {
-      id: 4,
-      name: 'Berita Acara Pertemuan.docx',
-      type: 'document',
-      date: '15 Mar 2025',
-      uploadedBy: 'Dewi Putri',
-      size: '850 KB'
-    }
-  ];
-
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+    setSearchQuery('');
   };
 
   const getStatusBadge = (status: string) => {
     switch(status) {
       case 'not-started':
+      case 'Belum Dimulai':
         return <Badge variant="outline" className="bg-muted/50-100 text-gray-800 hover:bg-muted/50-100">Belum Dimulai</Badge>;
       case 'in-progress':
+      case 'Pada Jadwal':
+      case 'Terlambat':
         return <Badge variant="outline" className="bg-info-100 text-blue-800 hover:bg-info-100">Sedang Berjalan</Badge>;
       case 'completed':
+      case 'Selesai':
         return <Badge variant="outline" className="bg-success-100 text-green-800 hover:bg-success-100">Selesai</Badge>;
+      case 'approved':
+        return <Badge variant="outline" className="bg-success-100 text-green-800 hover:bg-success-100">Disetujui</Badge>;
+      case 'in-review':
+        return <Badge variant="outline" className="bg-info-100 text-blue-800 hover:bg-info-100">Dalam Peninjauan</Badge>;
+      case 'rejected':
+        return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">Ditolak</Badge>;
+      case 'draft':
+        return <Badge variant="outline" className="bg-muted/50-100 text-gray-800 hover:bg-muted/50-100">Draft</Badge>;
       default:
         return null;
     }
@@ -194,13 +109,38 @@ const ProjectDetailPage = () => {
   const getStatusIcon = (status: string) => {
     switch(status) {
       case 'completed':
+      case 'Selesai':
         return <Check className="h-4 w-4 text-green-600" />;
       case 'in-progress':
+      case 'Pada Jadwal':
+      case 'Terlambat':
         return <Clock className="h-4 w-4 text-blue-600" />;
       default:
         return <AlertCircle className="h-4 w-4 text-gray-600" />;
     }
   };
+
+  // Filter items based on search query
+  const filteredMilestones = projectMilestones.filter(milestone => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return milestone.name.toLowerCase().includes(query);
+  });
+
+  const filteredReports = projectReports.filter(report => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      report.title.toLowerCase().includes(query) ||
+      report.activities.some(activity => activity.toLowerCase().includes(query))
+    );
+  });
+
+  const filteredDocuments = projectDocuments.filter(doc => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return doc.name.toLowerCase().includes(query);
+  });
 
   return (
     <div className="space-y-6">
@@ -279,7 +219,7 @@ const ProjectDetailPage = () => {
                     <UserCircle className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{project.pm}</p>
+                    <p className="text-sm font-medium">{team.pm}</p>
                     <p className="text-xs text-muted-foreground">Project Manager</p>
                   </div>
                 </div>
@@ -289,7 +229,7 @@ const ProjectDetailPage = () => {
                     <UserCircle className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{project.waspang}</p>
+                    <p className="text-sm font-medium">{team.waspang}</p>
                     <p className="text-xs text-muted-foreground">Pengawas Lapangan</p>
                   </div>
                 </div>
@@ -299,7 +239,7 @@ const ProjectDetailPage = () => {
                     <UserCircle className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{project.admin}</p>
+                    <p className="text-sm font-medium">{team.admin}</p>
                     <p className="text-xs text-muted-foreground">Admin</p>
                   </div>
                 </div>
@@ -327,6 +267,8 @@ const ProjectDetailPage = () => {
                   type="text"
                   placeholder={`Cari ${activeTab === 'milestones' ? 'milestone' : activeTab === 'reports' ? 'laporan' : 'dokumen'}...`}
                   className="pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             )}
@@ -365,24 +307,24 @@ const ProjectDetailPage = () => {
                 <div className="flex justify-between items-center space-x-2 pt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-4xl font-bold">{milestones.filter(m => m.status === 'completed').length}</div>
+                      <div className="text-4xl font-bold">{projectMilestones.filter(m => m.status === 'Selesai').length}</div>
                       <div className="text-sm font-medium text-muted-foreground mt-1">Selesai</div>
                     </div>
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-4xl font-bold">{milestones.filter(m => m.status === 'in-progress').length}</div>
+                      <div className="text-4xl font-bold">{projectMilestones.filter(m => m.status === 'Pada Jadwal' || m.status === 'Terlambat').length}</div>
                       <div className="text-sm font-medium text-muted-foreground mt-1">Sedang Berjalan</div>
                     </div>
                   </div>
                 </div>
                 <div className="mt-6">
                   <h4 className="text-sm font-medium mb-3">Milestone Berikutnya</h4>
-                  {milestones.filter(m => m.status === 'in-progress').slice(0, 1).map((milestone) => (
+                  {projectMilestones.filter(m => m.status === 'Pada Jadwal' || m.status === 'Terlambat').slice(0, 1).map((milestone) => (
                     <div key={milestone.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
                         <div className="font-medium">{milestone.name}</div>
                         <div className="text-sm text-muted-foreground">Tenggat: {milestone.deadline}</div>
                       </div>
-                      <div>{milestone.progress}%</div>
+                      <div>{milestone.progress || 0}%</div>
                     </div>
                   ))}
                   <div className="mt-4">
@@ -404,14 +346,14 @@ const ProjectDetailPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {reports.slice(0, 2).map((report) => (
+                  {projectReports.slice(0, 2).map((report) => (
                     <div key={report.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
                       <div className="flex justify-between mb-1">
                         <div className="font-medium">Laporan Harian</div>
                         <div className="text-sm text-muted-foreground">{report.date}</div>
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                        {report.activities[0]}
+                        {report.title}
                       </p>
                       <Link 
                         href="#" 
@@ -423,11 +365,11 @@ const ProjectDetailPage = () => {
                     </div>
                   ))}
                   
-                  {documents.slice(0, 2).map((doc) => (
+                  {projectDocuments.slice(0, 2).map((doc) => (
                     <div key={doc.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
                       <div className="flex justify-between mb-1">
                         <div className="font-medium">Dokumentasi Baru</div>
-                        <div className="text-sm text-muted-foreground">{doc.date}</div>
+                        <div className="text-sm text-muted-foreground">{doc.uploadDate}</div>
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">
                         {doc.name} ({doc.size})
@@ -452,50 +394,77 @@ const ProjectDetailPage = () => {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-6">
-                {milestones.map((milestone) => (
-                  <div key={milestone.id} className="flex items-start gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
-                    <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      milestone.status === 'completed' ? 'bg-success-100' : 
-                      milestone.status === 'in-progress' ? 'bg-info-100' : 
-                      'bg-muted/50-100'
-                    }`}>
-                      {getStatusIcon(milestone.status)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                        <div>
-                          <h3 className="text-base font-medium">{milestone.name}</h3>
-                          <div className="flex flex-wrap gap-2 mt-1">
-                            <div className="text-sm text-muted-foreground">
-                              Tenggat: {milestone.deadline}
-                            </div>
-                            {milestone.completedDate && (
+                {filteredMilestones.length > 0 ? (
+                  filteredMilestones.map((milestone) => (
+                    <div key={milestone.id} className="flex items-start gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
+                      <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        milestone.status === 'Selesai' ? 'bg-success-100' : 
+                        milestone.status === 'Pada Jadwal' || milestone.status === 'Terlambat' ? 'bg-info-100' : 
+                        'bg-muted/50-100'
+                      }`}>
+                        {getStatusIcon(milestone.status)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                          <div>
+                            <h3 className="text-base font-medium">{milestone.name}</h3>
+                            <div className="flex flex-wrap gap-2 mt-1">
                               <div className="text-sm text-muted-foreground">
-                                Selesai: {milestone.completedDate}
+                                Tenggat: {milestone.deadline}
                               </div>
-                            )}
-                            <div className="text-sm text-muted-foreground">
-                              PIC: {milestone.assignee}
+                              <div className="text-sm text-muted-foreground">
+                                Mulai: {milestone.startDate}
+                              </div>
                             </div>
                           </div>
+                          <div className="flex items-center gap-2">
+                            {getStatusBadge(milestone.status)}
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          {getStatusBadge(milestone.status)}
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
+                        <div className="mt-3">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span>Progress</span>
+                            <span>{milestone.progress || 0}%</span>
+                          </div>
+                          <Progress value={milestone.progress || 0} className="h-1.5" />
                         </div>
-                      </div>
-                      <div className="mt-3">
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span>Progress</span>
-                          <span>{milestone.progress}%</span>
+                      
+                        {/* Photo Requirements Section */}
+                        <div className="mt-4 pt-3 border-t border-border">
+                          <h4 className="text-sm font-medium mb-2">Dokumentasi Foto</h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            {milestone.requiredPhotos && milestone.requiredPhotos.map((photo, idx) => (
+                              <div 
+                                key={idx} 
+                                className={`text-xs p-2 rounded-md flex items-center gap-2 ${
+                                  photo.uploaded ? 'bg-success-50 text-green-700' : 'bg-muted/30 text-muted-foreground'
+                                }`}
+                              >
+                                {photo.uploaded ? (
+                                  <Check className="h-3.5 w-3.5 text-green-600" />
+                                ) : (
+                                  <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                                )}
+                                <span>{photo.name}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <Progress value={milestone.progress} className="h-1.5" />
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">Tidak ada milestone ditemukan</h3>
+                    <p className="text-muted-foreground max-w-sm mx-auto">
+                      Tidak ada milestone yang sesuai dengan pencarian Anda.
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
@@ -506,60 +475,70 @@ const ProjectDetailPage = () => {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-8">
-                {reports.map((report) => (
-                  <div key={report.id} className="pb-8 border-b border-border last:border-0 last:pb-0">
-                    <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-medium">Laporan Harian - {report.date}</h3>
-                          <Badge className="bg-success-100 text-green-800 hover:bg-success-100">
-                            Selesai
-                          </Badge>
+                {filteredReports.length > 0 ? (
+                  filteredReports.map((report) => (
+                    <div key={report.id} className="pb-8 border-b border-border last:border-0 last:pb-0">
+                      <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-medium">{report.title}</h3>
+                            {getStatusBadge(report.status)}
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Disubmit oleh: {report.submittedBy} pada {report.date} ({report.submittedAt})
+                          </p>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Disubmit oleh: {report.submittedBy}
-                        </p>
+                        <Button variant="outline" size="sm">
+                          <Download className="mr-2 h-3.5 w-3.5" />
+                          Unduh Laporan
+                        </Button>
                       </div>
-                      <Button variant="outline" size="sm">
-                        <Download className="mr-2 h-3.5 w-3.5" />
-                        Unduh Laporan
-                      </Button>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                      <div>
-                        <h4 className="text-sm font-medium mb-2">Aktivitas</h4>
-                        <ul className="space-y-2">
-                          {report.activities.map((activity, idx) => (
-                            <li key={idx} className="text-sm flex gap-2">
-                              <span className="text-muted-foreground">•</span>
-                              <span>{activity}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                          <h4 className="text-sm font-medium mb-2">Aktivitas</h4>
+                          <ul className="space-y-2">
+                            {report.activities.map((activity, idx) => (
+                              <li key={idx} className="text-sm flex gap-2">
+                                <span className="text-muted-foreground">•</span>
+                                <span>{activity}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-sm font-medium mb-2">Kendala</h4>
+                          <ul className="space-y-2">
+                            {report.issues && report.issues.length > 0 ? (
+                              report.issues.map((issue, idx) => (
+                                <li key={idx} className="text-sm flex gap-2">
+                                  <span className="text-muted-foreground">•</span>
+                                  <span>{issue}</span>
+                                </li>
+                              ))
+                            ) : (
+                              <li className="text-sm text-muted-foreground">Tidak ada kendala</li>
+                            )}
+                          </ul>
+                        </div>
                       </div>
                       
                       <div>
-                        <h4 className="text-sm font-medium mb-2">Material Terpakai</h4>
-                        <ul className="space-y-2">
-                          {report.materials.map((material, idx) => (
-                            <li key={idx} className="text-sm flex justify-between">
-                              <span>{material.name}</span>
-                              <span className="text-muted-foreground">{material.quantity}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <h4 className="text-sm font-medium mb-2">Rencana Selanjutnya</h4>
+                        <p className="text-sm text-muted-foreground">{report.nextPlan}</p>
                       </div>
                     </div>
-                    
-                    {report.issues && (
-                      <div>
-                        <h4 className="text-sm font-medium mb-2">Kendala</h4>
-                        <p className="text-sm text-muted-foreground">{report.issues}</p>
-                      </div>
-                    )}
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">Tidak ada laporan ditemukan</h3>
+                    <p className="text-muted-foreground max-w-sm mx-auto">
+                      Tidak ada laporan yang sesuai dengan pencarian Anda.
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
@@ -570,34 +549,40 @@ const ProjectDetailPage = () => {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {documents.map((doc) => (
-                    <div key={doc.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-all">
-                      <div className={`h-32 bg-muted flex items-center justify-center ${doc.type === 'image' ? 'bg-info-50' : 'bg-warning-50'}`}>
-                        {doc.type === 'image' ? (
-                          <FileText className="h-12 w-12 text-blue-400" />
-                        ) : (
-                          <FileText className="h-12 w-12 text-amber-400" />
-                        )}
-                      </div>
-                      <div className="p-3">
-                        <h3 className="font-medium text-sm truncate" title={doc.name}>{doc.name}</h3>
-                        <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                          <span>{doc.date}</span>
-                          <span>{doc.size}</span>
+                {filteredDocuments.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {filteredDocuments.map((doc) => (
+                      <div key={doc.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-all">
+                        <div className={`h-32 bg-muted flex items-center justify-center ${doc.type === 'image' ? 'bg-info-50' : 'bg-warning-50'}`}>
+                          <FileText className={`h-12 w-12 ${doc.type === 'image' ? 'text-blue-400' : 'text-amber-400'}`} />
                         </div>
-                        <div className="flex items-center justify-between mt-3">
-                          <div className="text-xs text-muted-foreground">
-                            {doc.uploadedBy}
+                        <div className="p-3">
+                          <h3 className="font-medium text-sm truncate" title={doc.name}>{doc.name}</h3>
+                          <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                            <span>{doc.uploadDate}</span>
+                            <span>{doc.size}</span>
                           </div>
-                          <Button variant="ghost" size="icon" className="h-6 w-6">
-                            <Download className="h-3.5 w-3.5" />
-                          </Button>
+                          <div className="flex items-center justify-between mt-3">
+                            <div className="text-xs text-muted-foreground">
+                              {doc.uploadedBy}
+                            </div>
+                            <Button variant="ghost" size="icon" className="h-6 w-6">
+                              <Download className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">Tidak ada dokumen ditemukan</h3>
+                    <p className="text-muted-foreground max-w-sm mx-auto">
+                      Tidak ada dokumen yang sesuai dengan pencarian Anda.
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

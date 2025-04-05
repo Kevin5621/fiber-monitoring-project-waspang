@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { File, FileText, FolderOpen, Image, MoreHorizontal, Plus, Search, Upload, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,131 +27,26 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import Link from 'next/link';
+import { documents } from '@/data/project/documents';
+import { projects } from '@/data/project/projects';
 
 const DocumentationPage = () => {
   const [filterProject, setFilterProject] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [projectList, setProjectList] = useState<any[]>([]);
+  const [documentList, setDocumentList] = useState<any[]>([]);
 
-  // Data proyek
-  const projects = [
-    { id: 1, name: 'Fiber Optik Jl. Sudirman' },
-    { id: 2, name: 'Fiber Optik Tebet' },
-    { id: 3, name: 'Fiber Optik Kemang' },
-    { id: 4, name: 'Instalasi Fiber BSD' },
-    { id: 5, name: 'Jaringan Fiber Menteng' }
-  ];
+  useEffect(() => {
+    // Load data from centralized sources
+    setProjectList(projects);
+    setDocumentList(documents);
+    setLoading(false);
+  }, []);
 
-  // Data dokumentasi (contoh)
-  const documents = [
-    { 
-      id: 1, 
-      name: 'Site Survey Report.pdf',
-      project: 'Fiber Optik Jl. Sudirman', 
-      projectId: 1,
-      type: 'document',
-      category: 'Survey',
-      fileType: 'PDF', 
-      size: '2.4 MB',
-      uploadedBy: 'Ahmad Rizal',
-      uploadDate: '12 Mar 2025', 
-      description: 'Laporan hasil survey lokasi pemasangan fiber optik di Jl. Sudirman'
-    },
-    { 
-      id: 2, 
-      name: 'Material List.xlsx',
-      project: 'Fiber Optik Jl. Sudirman', 
-      projectId: 1,
-      type: 'document',
-      category: 'Perencanaan',
-      fileType: 'Excel', 
-      size: '1.7 MB',
-      uploadedBy: 'Budi Santoso',
-      uploadDate: '14 Mar 2025', 
-      description: 'Daftar material yang dibutuhkan untuk proyek fiber optik'
-    },
-    { 
-      id: 3, 
-      name: 'Foto Lokasi Sudirman.jpg',
-      project: 'Fiber Optik Jl. Sudirman', 
-      projectId: 1,
-      type: 'image',
-      category: 'Dokumentasi',
-      fileType: 'JPG', 
-      size: '3.1 MB',
-      uploadedBy: 'Dewi Putri',
-      uploadDate: '15 Mar 2025', 
-      description: 'Foto lokasi yang akan dipasang fiber optik di Jl. Sudirman'
-    },
-    { 
-      id: 4, 
-      name: 'Network Diagram.pdf',
-      project: 'Fiber Optik Jl. Sudirman', 
-      projectId: 1,
-      type: 'document',
-      category: 'Teknikal',
-      fileType: 'PDF', 
-      size: '4.2 MB',
-      uploadedBy: 'Rudi Hartono',
-      uploadDate: '16 Mar 2025', 
-      description: 'Diagram jaringan fiber optik di Jl. Sudirman'
-    },
-    { 
-      id: 5, 
-      name: 'Implementation Plan.docx',
-      project: 'Fiber Optik Tebet', 
-      projectId: 2,
-      type: 'document',
-      category: 'Perencanaan',
-      fileType: 'Word', 
-      size: '1.5 MB',
-      uploadedBy: 'Ahmad Rizal',
-      uploadDate: '10 Mar 2025', 
-      description: 'Rencana implementasi proyek fiber optik di Tebet'
-    },
-    { 
-      id: 6, 
-      name: 'Foto Galian Kabel.jpg',
-      project: 'Fiber Optik Tebet', 
-      projectId: 2,
-      type: 'image',
-      category: 'Dokumentasi',
-      fileType: 'JPG', 
-      size: '2.8 MB',
-      uploadedBy: 'Dewi Putri',
-      uploadDate: '17 Mar 2025', 
-      description: 'Foto proses penggalian untuk jalur kabel fiber optik di Tebet'
-    },
-    { 
-      id: 7, 
-      name: 'MoM Kick-off Meeting.pdf',
-      project: 'Fiber Optik Kemang', 
-      projectId: 3,
-      type: 'document',
-      category: 'Administrasi',
-      fileType: 'PDF', 
-      size: '1.1 MB',
-      uploadedBy: 'Siti Nuraini',
-      uploadDate: '05 Mar 2025', 
-      description: 'Notulensi rapat kick-off proyek fiber optik di Kemang'
-    },
-    { 
-      id: 8, 
-      name: 'Quality Check Report.pdf',
-      project: 'Fiber Optik Kemang', 
-      projectId: 3,
-      type: 'document',
-      category: 'QC',
-      fileType: 'PDF', 
-      size: '3.5 MB',
-      uploadedBy: 'Bambang Kusumo',
-      uploadDate: '22 Mar 2025', 
-      description: 'Laporan hasil pemeriksaan kualitas pemasangan fiber optik di Kemang'
-    }
-  ];
-
-  // Filter dokumen
-  const filteredDocuments = documents
+  // Filter documents
+  const filteredDocuments = documentList
     .filter(doc => filterProject === 'all' || doc.projectId.toString() === filterProject)
     .filter(doc => filterType === 'all' || doc.type === filterType)
     .filter(doc => {
@@ -165,20 +60,20 @@ const DocumentationPage = () => {
       );
     });
 
-  // Menghitung jumlah dokumen per proyek
-  const projectDocCounts = projects.map(project => {
-    const count = documents.filter(doc => doc.projectId === project.id).length;
+  // Calculate document counts per project
+  const projectDocCounts = projectList.map(project => {
+    const count = documentList.filter(doc => doc.projectId === project.id).length;
     return { ...project, docCount: count };
   });
 
-  // Menghitung jumlah dokumen berdasarkan kategori
-  const categories = Array.from(new Set(documents.map(doc => doc.category)));
+  // Calculate document counts by category
+  const categories = Array.from(new Set(documentList.map(doc => doc.category)));
   const categoryStats = categories.map(category => {
-    const count = documents.filter(doc => doc.category === category).length;
+    const count = documentList.filter(doc => doc.category === category).length;
     return { category, count };
   }).sort((a, b) => b.count - a.count);
 
-  // Mendapatkan icon berdasarkan tipe file
+  // Get icon based on file type
   const getFileIcon = (fileType: string, type: string) => {
     if (type === 'image') return <Image className="h-6 w-6 text-blue-500" />;
     
@@ -193,6 +88,15 @@ const DocumentationPage = () => {
         return <File className="h-6 w-6 text-muted-foreground" />;
     }
   };
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Memuat data dokumentasi...</p>
+      </div>
+    </div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -217,10 +121,10 @@ const DocumentationPage = () => {
           <CardContent>
             <div className="flex items-center">
               <FileText className="h-5 w-5 mr-2 text-primary" />
-              <span className="text-2xl font-bold">{documents.length}</span>
+              <span className="text-2xl font-bold">{documentList.length}</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {documents.filter(d => d.type === 'document').length} dokumen, {documents.filter(d => d.type === 'image').length} gambar
+              {documentList.filter(d => d.type === 'document').length} dokumen, {documentList.filter(d => d.type === 'image').length} gambar
             </p>
           </CardContent>
         </Card>
@@ -230,7 +134,7 @@ const DocumentationPage = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {documents
+              {documentList
                 .sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime())
                 .slice(0, 2)
                 .map(doc => (
@@ -296,7 +200,7 @@ const DocumentationPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Proyek</SelectItem>
-                  {projects.map(project => (
+                  {projectList.map(project => (
                     <SelectItem key={project.id} value={project.id.toString()}>{project.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -325,7 +229,7 @@ const DocumentationPage = () => {
             <CardHeader>
               <CardTitle>Semua Dokumentasi</CardTitle>
               <CardDescription>
-                Menampilkan {filteredDocuments.length} dari {documents.length} item
+                Menampilkan {filteredDocuments.length} dari {documentList.length} item
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -537,7 +441,7 @@ const DocumentationPage = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {documents
+                      {documentList
                         .filter(doc => doc.projectId === project.id)
                         .slice(0, 3)
                         .map(doc => (
@@ -568,4 +472,4 @@ const DocumentationPage = () => {
   );
 };
 
-export default DocumentationPage; 
+export default DocumentationPage;

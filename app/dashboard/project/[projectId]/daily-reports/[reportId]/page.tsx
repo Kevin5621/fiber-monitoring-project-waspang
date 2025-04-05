@@ -1,69 +1,41 @@
-// app/(dashboard)/projects/[projectId]/daily-reports/[reportId]/page.tsx
-import React from 'react';
+"use client"
+
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Calendar, Check, Clock, Download, FileText, MapPin, Printer, UserCircle } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { dailyReports } from '@/data/project/reports';
+import { projects } from '@/data/project/projects';
 
-export default function DailyReportDetailPage({ params }: { params: { projectId: string, reportId: string } }) {
-  // Sample report data
-  const report = {
-    id: params.reportId,
-    date: '22 Mar 2025',
-    submitted: '22 Mar 2025, 17:45',
-    author: 'Ahmad Rizal',
-    location: 'Jl. Jendral Sudirman KM 4.5, Jakarta Pusat',
-    progress: 12,
-    status: 'approved',
-    approvedBy: 'Budi Santoso',
-    approvedAt: '22 Mar 2025, 19:20',
-    summary: 'Hari ini tim melakukan pengerjaan pemasangan kabel fiber optic di area Sudirman. Pekerjaan meliputi penarikan kabel sepanjang 300 meter dan pemeriksaan jalur kabel yang sudah dipasang sebelumnya.',
-    workItems: [
-      'Penarikan kabel fiber optic sepanjang 300 meter',
-      'Pemeriksaan dan testing jalur fiber optik',
-      'Persiapan lokasi pemasangan tiang baru'
-    ],
-    challenges: 'Terdapat beberapa titik yang sulit dijangkau karena berada di area padat penduduk. Tim harus koordinasi dengan warga sekitar untuk mendapatkan izin akses.',
-    materials: [
-      { name: 'Kabel Fiber Optik', quantity: '300 meter' },
-      { name: 'Tiang Pancang', quantity: '5 unit' },
-      { name: 'Konektor SC', quantity: '10 buah' }
-    ],
-    photos: [
-      { 
-        id: 'p1', 
-        url: '/api/placeholder/400/300', 
-        type: 'equipment', 
-        caption: 'Peralatan yang digunakan' 
-      },
-      { 
-        id: 'p2', 
-        url: '/api/placeholder/400/300', 
-        type: 'process', 
-        caption: 'Proses penarikan kabel' 
-      },
-      { 
-        id: 'p3', 
-        url: '/api/placeholder/400/300', 
-        type: 'process', 
-        caption: 'Tim melakukan testing jalur' 
-      },
-      { 
-        id: 'p4', 
-        url: '/api/placeholder/400/300', 
-        type: 'result', 
-        caption: 'Hasil pemasangan kabel' 
-      },
-      { 
-        id: 'p5', 
-        url: '/api/placeholder/400/300', 
-        type: 'location', 
-        caption: 'Lokasi pemasangan tiang baru' 
-      }
-    ]
-  };
+export default function DailyReportDetailPage() {
+  const params = useParams();
+  const projectId = Number(params.projectId);
+  const reportId = Number(params.reportId);
+  const [report, setReport] = useState<any>(null);
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Get report from centralized data
+    const foundReport = dailyReports.find(r => r.id === reportId);
+    const foundProject = projects.find(p => p.id === projectId);
+    
+    if (foundReport) {
+      setReport(foundReport);
+    }
+    
+    if (foundProject) {
+      setProject(foundProject);
+    }
+    
+    setLoading(false);
+  }, [projectId, reportId]);
 
   const getStatusBadge = (status: string) => {
     switch(status) {
-      case 'pending':
+      case 'draft':
+        return <span className="px-2 py-1 text-xs rounded-full bg-muted/50-100 text-gray-800">Draft</span>;
+      case 'in-review':
         return <span className="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning">Menunggu</span>;
       case 'approved':
         return <span className="px-2 py-1 text-xs rounded-full bg-success-100 text-green-800">Disetujui</span>;
@@ -74,13 +46,38 @@ export default function DailyReportDetailPage({ params }: { params: { projectId:
     }
   };
 
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Memuat data laporan...</p>
+      </div>
+    </div>;
+  }
+
+  if (!report) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h2 className="text-xl font-medium mb-2">Laporan Tidak Ditemukan</h2>
+        <p className="text-muted-foreground mb-4">Laporan dengan ID {reportId} tidak ditemukan.</p>
+        <Link 
+          href={`/dashboard/project/${projectId}`}
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90"
+        >
+          Kembali ke Proyek
+        </Link>
+      </div>
+    </div>;
+  }
+
   return (
     <div className="min-h-screen bg-muted/50-50">
       {/* Header */}
       <header className="bg-card shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link href={`/projects/${params.projectId}/daily-reports`} className="mr-3 text-gray-400 hover:text-muted-foreground">
+            <Link href={`/dashboard/project/${projectId}`} className="mr-3 text-gray-400 hover:text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <h1 className="text-xl font-medium text-foreground">Detail Laporan Harian</h1>
@@ -93,13 +90,13 @@ export default function DailyReportDetailPage({ params }: { params: { projectId:
         <div className="mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between bg-card p-4 rounded-lg shadow-sm border border-border-100">
             <div className="flex flex-col mb-4 md:mb-0">
-              <h2 className="text-lg font-medium text-foreground">Laporan Harian #{report.id}</h2>
+              <h2 className="text-lg font-medium text-foreground">{report.title}</h2>
               <div className="flex items-center mt-1 text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4 mr-1" />
                 <span>{report.date}</span>
                 <span className="mx-2">•</span>
                 <Clock className="h-4 w-4 mr-1" />
-                <span>Disubmit: {report.submitted}</span>
+                <span>Disubmit: {report.submittedAt}</span>
               </div>
             </div>
             <div className="flex space-x-2">
@@ -121,14 +118,14 @@ export default function DailyReportDetailPage({ params }: { params: { projectId:
             {/* Summary Card */}
             <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
               <h3 className="text-lg font-medium text-foreground mb-4">Ringkasan</h3>
-              <p className="text-foreground/80">{report.summary}</p>
+              <p className="text-foreground/80">{report.title}</p>
             </div>
 
             {/* Work Items Card */}
             <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
               <h3 className="text-lg font-medium text-foreground mb-4">Detail Pekerjaan</h3>
               <ul className="space-y-2">
-                {report.workItems.map((item, index) => (
+                {report.activities.map((item: string, index: number) => (
                   <li key={index} className="flex items-start">
                     <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                     <span className="text-foreground/80">{item}</span>
@@ -140,39 +137,57 @@ export default function DailyReportDetailPage({ params }: { params: { projectId:
             {/* Challenges Card */}
             <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
               <h3 className="text-lg font-medium text-foreground mb-4">Kendala</h3>
-              <p className="text-foreground/80">{report.challenges}</p>
+              {report.issues && report.issues.length > 0 ? (
+                <ul className="space-y-2">
+                  {report.issues.map((issue: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="text-foreground/80">• {issue}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-foreground/80">Tidak ada kendala yang dilaporkan.</p>
+              )}
+            </div>
+
+            {/* Next Plan Card */}
+            <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
+              <h3 className="text-lg font-medium text-foreground mb-4">Rencana Selanjutnya</h3>
+              <p className="text-foreground/80">{report.nextPlan}</p>
             </div>
 
             {/* Materials Card */}
-            <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
-              <h3 className="text-lg font-medium text-foreground mb-4">Material yang Digunakan</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-muted/50-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Material
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Jumlah
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-card divide-y divide-gray-200">
-                    {report.materials.map((material, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
-                          {material.name}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                          {material.quantity}
-                        </td>
+            {report.materials && report.materials.length > 0 && (
+              <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6">
+                <h3 className="text-lg font-medium text-foreground mb-4">Material yang Digunakan</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-muted/50-50">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Material
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Jumlah
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="bg-card divide-y divide-gray-200">
+                      {report.materials.map((material: any, index: number) => (
+                        <tr key={index}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
+                            {material.name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                            {material.quantity}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right Column */}
@@ -196,30 +211,39 @@ export default function DailyReportDetailPage({ params }: { params: { projectId:
                   </div>
                 </div>
                 <div>
+                  <p className="text-sm text-muted-foreground">Proyek</p>
+                  <div className="flex items-center mt-1">
+                    <FileText className="h-4 w-4 text-gray-400 mr-1" />
+                    <span className="text-sm text-foreground/80">{report.project}</span>
+                  </div>
+                </div>
+                <div>
                   <p className="text-sm text-muted-foreground">Lokasi</p>
                   <div className="flex items-center mt-1">
                     <MapPin className="h-4 w-4 text-gray-400 mr-1" />
-                    <span className="text-sm text-foreground/80">{report.location}</span>
+                    <span className="text-sm text-foreground/80">{project?.location || 'Tidak tersedia'}</span>
                   </div>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Dibuat oleh</p>
                   <div className="flex items-center mt-1">
                     <UserCircle className="h-4 w-4 text-gray-400 mr-1" />
-                    <span className="text-sm text-foreground/80">{report.author}</span>
+                    <span className="text-sm text-foreground/80">{report.submittedBy}</span>
                   </div>
                 </div>
-                {report.status === 'approved' && (
+                {report.status === 'approved' && report.approvedBy && (
                   <div>
                     <p className="text-sm text-muted-foreground">Disetujui oleh</p>
                     <div className="flex items-center mt-1">
                       <UserCircle className="h-4 w-4 text-gray-400 mr-1" />
                       <span className="text-sm text-foreground/80">{report.approvedBy}</span>
                     </div>
-                    <div className="flex items-center mt-1">
-                      <Clock className="h-4 w-4 text-gray-400 mr-1" />
-                      <span className="text-sm text-muted-foreground">{report.approvedAt}</span>
-                    </div>
+                    {report.approvedAt && (
+                      <div className="flex items-center mt-1">
+                        <Clock className="h-4 w-4 text-gray-400 mr-1" />
+                        <span className="text-sm text-muted-foreground">{report.approvedAt}</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -228,25 +252,27 @@ export default function DailyReportDetailPage({ params }: { params: { projectId:
         </div>
 
         {/* Photos Section */}
-        <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6 mb-6">
-          <h3 className="text-lg font-medium text-foreground mb-4">Dokumentasi Foto</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {report.photos.map((photo) => (
-              <div key={photo.id} className="border border-border-200 rounded-lg overflow-hidden">
-                <img src={photo.url} alt={photo.caption} className="w-full h-48 object-cover" />
-                <div className="p-3">
-                  <span className="inline-block px-2 py-1 text-xs rounded-full bg-info-100 text-blue-800 mb-2">
-                    {photo.type === 'equipment' && 'Peralatan'}
-                    {photo.type === 'process' && 'Proses'}
-                    {photo.type === 'result' && 'Hasil'}
-                    {photo.type === 'location' && 'Lokasi'}
-                  </span>
-                  <p className="text-sm text-foreground/80">{photo.caption}</p>
+        {report.photos && report.photos.length > 0 && (
+          <div className="bg-card rounded-lg shadow-sm border border-border-100 p-6 mb-6">
+            <h3 className="text-lg font-medium text-foreground mb-4">Dokumentasi Foto</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {report.photos.map((photo: any) => (
+                <div key={photo.id} className="border border-border-200 rounded-lg overflow-hidden">
+                  <img src={photo.url} alt={photo.caption} className="w-full h-48 object-cover" />
+                  <div className="p-3">
+                    <span className="inline-block px-2 py-1 text-xs rounded-full bg-info-100 text-blue-800 mb-2">
+                      {photo.type === 'equipment' && 'Peralatan'}
+                      {photo.type === 'process' && 'Proses'}
+                      {photo.type === 'result' && 'Hasil'}
+                      {photo.type === 'location' && 'Lokasi'}
+                    </span>
+                    <p className="text-sm text-foreground/80">{photo.caption}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
