@@ -51,6 +51,24 @@ export const mockData = (currentDate: Date) => {
     }
   ];
 
+  const documents: DocumentProps['doc'][] = [
+    { 
+      name: 'Foto Pemasangan Kabel', 
+      project: 'Fiber Optik Tebet', 
+      deadline: currentDate.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      }) 
+    },
+    { name: 'Foto Label Kabel', project: 'Fiber Optik Sudirman', deadline: '30 Mar 2025' },
+    { name: 'Foto Penutupan Galian', project: 'Fiber Optik Kemang', deadline: '01 Apr 2025' },
+    { name: 'Foto Survey Lokasi 1', project: 'Fiber Optik Tebet', deadline: '25 Mar 2025' },
+    { name: 'Foto Survey Lokasi 2', project: 'Fiber Optik Tebet', deadline: '25 Mar 2025' },
+    { name: 'Foto Persiapan Alat 1', project: 'Fiber Optik Jl. Sudirman', deadline: '22 Mar 2025' },
+    { name: 'Foto Persiapan Alat 2', project: 'Fiber Optik Jl. Sudirman', deadline: '22 Mar 2025' },
+  ];
+
   const milestones: MilestoneProps['milestone'][] = [
     {
       id: 1,
@@ -68,6 +86,9 @@ export const mockData = (currentDate: Date) => {
       }),
       status: 'Pada Jadwal',
       icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
+      requiredDocs: 2,
+      uploadedDocs: 2,
+      documents: documents.filter(doc => doc.name.includes('Persiapan Alat'))
     },
     { 
       id: 2,
@@ -76,7 +97,10 @@ export const mockData = (currentDate: Date) => {
       deadline: '28 Mar 2025',
       startDate: '20 Mar 2025',
       status: 'Terlambat',
-      icon: React.createElement(AlertCircle, { className: "h-4 w-4" })
+      icon: React.createElement(AlertCircle, { className: "h-4 w-4" }),
+      requiredDocs: 3,
+      uploadedDocs: 1,
+      documents: documents.filter(doc => doc.name.includes('Pemasangan Kabel'))
     },
     { 
       id: 3,
@@ -85,7 +109,10 @@ export const mockData = (currentDate: Date) => {
       deadline: '01 Apr 2025',
       startDate: '26 Mar 2025',
       status: 'Pada Jadwal',
-      icon: React.createElement(CheckCircle, { className: "h-4 w-4" })
+      icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
+      requiredDocs: 2,
+      uploadedDocs: 1,
+      documents: documents.filter(doc => doc.name.includes('Penutupan'))
     },
     {
       id: 4,
@@ -94,7 +121,10 @@ export const mockData = (currentDate: Date) => {
       deadline: '25 Mar 2025',
       startDate: '22 Mar 2025',
       status: 'Selesai',
-      icon: React.createElement(CheckCircle, { className: "h-4 w-4" })
+      icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
+      requiredDocs: 2,
+      uploadedDocs: 2,
+      documents: documents.filter(doc => doc.name.includes('Survey'))
     },
     {
       id: 5,
@@ -103,22 +133,11 @@ export const mockData = (currentDate: Date) => {
       deadline: '02 Apr 2025',
       startDate: '30 Mar 2025',
       status: 'Belum Dimulai',
-      icon: React.createElement(Clock, { className: "h-4 w-4" })
+      icon: React.createElement(Clock, { className: "h-4 w-4" }),
+      requiredDocs: 3,
+      uploadedDocs: 0,
+      documents: []
     }
-  ];
-
-  const documents: DocumentProps['doc'][] = [
-    { 
-      name: 'Foto Pemasangan Kabel', 
-      project: 'Fiber Optik Tebet', 
-      deadline: currentDate.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      }) 
-    },
-    { name: 'Foto Label Kabel', project: 'Fiber Optik Sudirman', deadline: '30 Mar 2025' },
-    { name: 'Foto Penutupan Galian', project: 'Fiber Optik Kemang', deadline: '01 Apr 2025' }
   ];
 
   const activities: ActivityProps['activity'][] = [

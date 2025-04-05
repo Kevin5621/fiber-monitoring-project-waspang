@@ -16,7 +16,6 @@ export const DocumentCard = ({ doc }: DocumentProps) => {
           <div className="flex-grow">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-semibold text-lg">{doc.name}</h4>
-              <Badge variant="destructive">Diperlukan</Badge>
             </div>
             <p className="text-sm text-muted-foreground">{doc.project}</p>
             <p className="text-xs text-destructive mt-2">Tenggat: {doc.deadline}</p>

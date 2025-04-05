@@ -30,6 +30,11 @@ export interface MilestoneProps {
     startDate: string;
     status: 'Pada Jadwal' | 'Terlambat' | 'Selesai' | 'Belum Dimulai' | string;
     icon: ReactNode;
+    description?: string;
+    // Document tracking properties
+    requiredDocs: number;
+    uploadedDocs: number;
+    documents?: DocumentProps['doc'][];
   };
 }
 

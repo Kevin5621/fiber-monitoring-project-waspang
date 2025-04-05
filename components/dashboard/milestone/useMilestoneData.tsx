@@ -127,8 +127,19 @@ export const useMilestoneData = (projectGroups: Record<string, any[]>, selectedP
     const endDate = parseDate(currentMilestone.deadline);
     const now = new Date();
     
+    // Check document upload status
+    const docsComplete = currentMilestone.uploadedDocs >= currentMilestone.requiredDocs;
+    
+    // If not started yet
     if (now < startDate) return "not-started";
-    if (now > endDate) return "completed";
+    
+    // If past deadline but docs not complete
+    if (now > endDate && !docsComplete) return "late";
+    
+    // If docs are complete, mark as completed regardless of date
+    if (docsComplete) return "completed";
+    
+    // Otherwise in progress
     return "in-progress";
   };
   

@@ -88,8 +88,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
 
           {/* Page Content */}
-          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 pb-20 md:pb-8">
-            <div className="mx-auto max-w-7xl">
+          <main className="flex-1 overflow-auto pb-20">
+            <div className="mx-auto">
               {children}
             </div>
           </main>

@@ -11,7 +11,6 @@ import { Separator } from '@/components/ui/separator';
 import { MilestoneChart } from '@/components/dashboard/milestone/MilestoneChart';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { PriorityTaskCard } from '@/components/dashboard/PriorityTaskCard';
-import { MilestoneCard } from '@/components/dashboard/MilestoneCard';
 import { DocumentCard } from '@/components/dashboard/DocumentCard';
 import { ActivityItem } from '@/components/dashboard/ActivityItem';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
@@ -93,7 +92,7 @@ const DashboardPage = () => {
       {/* Main Content Tabs */}
       <div className="mb-6">
         <Tabs defaultValue="milestones" className="w-full">
-          <div className="border-b mb-4 sm:mb-6">
+          <div className="mb-4 sm:mb-6">
             <TabsList className="grid grid-cols-3 w-full">
               <TabsTrigger value="milestones">Milestone</TabsTrigger>
               <TabsTrigger value="reports">Laporan</TabsTrigger>
@@ -108,31 +107,9 @@ const DashboardPage = () => {
             </div>
             
             {/* Milestone Timeline Chart */}
-            <Card className="mb-6 transition-all duration-200 hover:shadow-lg">
-              <CardContent className="p-3 sm:p-6">
                 <div className="overflow-x-auto">
                   <MilestoneChart milestones={milestones} />
                 </div>
-              </CardContent>
-            </Card>
-            
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-2">
-              <h3 className="text-lg sm:text-xl font-semibold">Milestone Aktif</h3>
-              <div className="flex gap-2 text-xs sm:text-sm">
-                <Badge variant="outline" className="bg-primary/10">
-                  <CheckCircle className="h-3 w-3 mr-1" /> Pada Jadwal
-                </Badge>
-                <Badge variant="outline" className="bg-destructive/10 text-destructive">
-                  <AlertCircle className="h-3 w-3 mr-1" /> Terlambat
-                </Badge>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {milestones.slice(0, 3).map((milestone, i) => (
-                <MilestoneCard key={i} milestone={milestone} />
-              ))}
-            </div>
           </TabsContent>
           
           {/* Reports Tab */}
