@@ -1,16 +1,4 @@
-import { ReactNode, ReactElement } from 'react';
-
-// Priority Task Types
-export interface PriorityTaskProps {
-    task: {
-        title: string;
-        project: string;
-        progress?: number;
-        deadline?: string;
-        badge: string;
-        badgeVariant: "default" | "destructive" | "outline" | "secondary";
-    };
-}
+import { ReactNode } from 'react';
 
 // Milestone Types
 export interface MilestoneProps {

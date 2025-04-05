@@ -9,91 +9,90 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { MilestoneChart } from '@/components/dashboard/milestone/MilestoneChart';
-import { PriorityTaskCard } from '@/components/dashboard/PriorityTaskCard';
 import { DocumentCard } from '@/components/dashboard/DocumentCard';
 import { ActivityItem } from '@/components/dashboard/ActivityItem';
 import { StatCard, StatProps } from '@/components/dashboard/StatCard';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
-import { mockData } from '@/data/dashboardData';
-import { PriorityTaskProps, MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
+import { mockData, ProjectLocation } from '@/data/dashboardData';
+import { MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
+import ProjectMap from '@/components/dashboard/map/ProjectMap';
+import LocationFilters from '@/components/dashboard/map/LocationFilters';
+import MapLegend from '@/components/dashboard/map/MapLegend';
 
 // Define the dashboard data type
 interface DashboardData {
-  priorityTasks: PriorityTaskProps['task'][];
   stats: StatProps[];
   mobileStats: StatProps[];
   milestones: MilestoneProps['milestone'][];
   documents: DocumentProps['doc'][];
   activities: ActivityProps['activity'][];
+  projectLocations: ProjectLocation[];
 }
 
 const DashboardPage = () => {
-  // State to hold dashboard data with proper typing
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
-  // Use custom hook for date/time formatting
   const { currentDate, formattedDate, formattedTime } = useDateTimeFormatter();
+  const [selectedArea, setSelectedArea] = useState<string | null>(null);
   
-  // Initialize dashboard data on client-side only
   useEffect(() => {
-    const data = mockData(currentDate);
-    setDashboardData(data);
+    setDashboardData(mockData(currentDate));
   }, [currentDate]);
 
-  // Return loading state if data isn't ready
   if (!dashboardData) {
     return <div className="container mx-auto p-6">Loading dashboard...</div>;
   }
 
-  // Destructure data after it's available
-  const { priorityTasks, stats, mobileStats, milestones, documents, activities } = dashboardData;
+  const { stats, mobileStats, milestones, documents, activities, projectLocations } = dashboardData;
+  
+  // Helper function to dispatch map navigation events
+  const navigateMap = (action: string, params: any = {}) => {
+    window.dispatchEvent(new CustomEvent('map-navigate', { 
+      detail: { action, ...params } 
+    }));
+  };
 
   return (
     <div className="container mx-auto p-4 sm:p-6">
       {/* Header with Date and Time */}
       <div className="mb-4 sm:mb-6 flex justify-end">
         <div className="flex flex-row gap-2 text-xs sm:text-sm">
-          <div className="bg-secondary/50 px-2 py-1 sm:px-3 sm:py-2 rounded-lg flex items-center">
-            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-primary" />
-            <span className="font-medium">{formattedDate}</span>
-          </div>
-          <div className="bg-secondary/50 px-2 py-1 sm:px-3 sm:py-2 rounded-lg flex items-center">
-            <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-primary" />
-            <span className="font-medium">{formattedTime}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Overview - Desktop */}
-      <div className="hidden sm:grid sm:grid-cols-3 gap-4 mb-6">
-        {stats.map((stat: StatProps, i: number) => (
-          <StatCard key={i} stat={stat} />
-        ))}
-      </div>
-
-      {/* Stats Overview - Mobile */}
-      <div className="grid grid-cols-3 gap-2 mb-4 sm:hidden">
-        {mobileStats.map((stat: StatProps, i: number) => (
-          <StatCard key={i} stat={stat} />
-        ))}
-      </div>
-
-      {/* Priority Tasks */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg sm:text-xl font-semibold">Prioritas Hari Ini</h2>
-        </div>
-        <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 hidden">
-          {priorityTasks.map((task: PriorityTaskProps['task'], i: number) => (
-            <PriorityTaskCard key={i} task={task} />
-          ))}
-        </div>
-        {/* Mobile horizontal scrollable version */}
-        <div className="flex overflow-x-auto pb-2 gap-3 sm:hidden">
-          {priorityTasks.map((task: PriorityTaskProps['task'], i: number) => (
-            <div key={i} className="min-w-[280px] flex-shrink-0">
-              <PriorityTaskCard task={task} />
+          {['date', 'time'].map((type, i) => (
+            <div key={i} className="bg-secondary/50 px-2 py-1 sm:px-3 sm:py-2 rounded-lg flex items-center">
+              {type === 'date' ? 
+                <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-primary" /> : 
+                <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-primary" />
+              }
+              <span className="font-medium">{type === 'date' ? formattedDate : formattedTime}</span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Stats Overview - Desktop & Mobile */}
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4 mb-6">
+        {stats.map((stat, i) => <StatCard key={i} stat={stat} />)}
+      </div>
+      <div className="grid grid-cols-3 gap-2 mb-4 sm:hidden">
+        {mobileStats.map((stat, i) => <StatCard key={i} stat={stat} />)}
+      </div>      
+      
+      {/* Project Map */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg sm:text-xl font-semibold">Lokasi Proyek</h2>
+          <MapLegend />
+        </div>
+        
+        {/* Location Filters Component */}
+        <LocationFilters 
+          projectLocations={projectLocations}
+          selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
+          navigateMap={navigateMap}
+        />
+        
+        <div className="h-[300px] sm:h-[400px] w-full">
+          <ProjectMap projectLocations={projectLocations} milestones={milestones} />
         </div>
       </div>
 
@@ -102,9 +101,11 @@ const DashboardPage = () => {
         <Tabs defaultValue="milestones" className="w-full">
           <div className="mb-4 sm:mb-6">
             <TabsList className="grid grid-cols-3 w-full">
-              <TabsTrigger value="milestones">Milestone</TabsTrigger>
-              <TabsTrigger value="reports">Laporan</TabsTrigger>
-              <TabsTrigger value="docs">Dokumentasi</TabsTrigger>
+              {['milestones', 'reports', 'docs'].map((tab, i) => (
+                <TabsTrigger key={i} value={tab}>
+                  {tab === 'milestones' ? 'Milestone' : tab === 'reports' ? 'Laporan' : 'Dokumentasi'}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </div>
           
