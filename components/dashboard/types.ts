@@ -30,15 +30,6 @@ export interface DocumentProps {
   onAddDocument?: (name: string, milestoneId: string) => void;
 }
 
-// Activity Types
-export interface ActivityProps {
-  activity: {
-    action: string;
-    time: string;
-    project: string;
-  };
-}
-
 // Map Types
 // Area classification for projects
 export interface ProjectArea {
