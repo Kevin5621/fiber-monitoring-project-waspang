@@ -143,80 +143,71 @@ const ProjectDetailPage = () => {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Page Title and Back Button */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard/project" className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">{project.name}</h2>
-            <p className="text-muted-foreground">{project.location}</p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <Button variant="outline">
+    <div className="container mx-auto p-4 sm:p-6 relative">
+      {/* Back Button and Project Title */}
+      <div className="flex items-center mb-6">
+        <Link href="/dashboard/project" className="mr-4 p-2 rounded-full bg-muted/50 hover:bg-muted/80 transition-colors">
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+        <h2 className="text-2xl font-bold">{project.name}</h2>
+        <div className="ml-auto flex items-center gap-2">
+          <Button variant="outline" size="sm" className="h-9">
             <Download className="mr-2 h-4 w-4" />
             Ekspor
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Tambah
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Clock className="mr-2 h-4 w-4" />
-                Tambah Milestone
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FileText className="mr-2 h-4 w-4" />
-                Buat Laporan Harian
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Dokumentasi
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
-      {/* Project Header Card */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+      {/* Project Overview Card */}
+      <Card className="mb-6 overflow-hidden border-none shadow-md">
+        <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Project Info */}
+            <div className="lg:col-span-2">
               <div className="flex flex-wrap gap-3 mb-4">
                 {getStatusBadge(project.status)}
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                   <span>{project.startDate} - {project.endDate}</span>
                 </div>
+                <div className="text-sm text-muted-foreground">
+                  <span className="font-medium">Lokasi:</span> {project.location}
+                </div>
               </div>
               
               <p className="text-muted-foreground mb-6">{project.description}</p>
               
-              <div>
+              <div className="bg-background/80 rounded-lg p-4 backdrop-blur-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium">Progres Keseluruhan</span>
                   <span className="text-sm font-medium">{project.progress}%</span>
                 </div>
-                <Progress value={project.progress} className="h-2 mb-1" />
+                <Progress value={project.progress} className="h-2 mb-3" />
+                
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  <div className="text-center p-3 bg-muted/30 rounded-lg">
+                    <div className="text-2xl font-bold">{projectMilestones.length}</div>
+                    <div className="text-xs text-muted-foreground mt-1">Total Milestone</div>
+                  </div>
+                  <div className="text-center p-3 bg-success-50 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">{projectMilestones.filter(m => m.status === 'Selesai').length}</div>
+                    <div className="text-xs text-muted-foreground mt-1">Selesai</div>
+                  </div>
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">{projectMilestones.filter(m => m.status === 'Pada Jadwal' || m.status === 'Terlambat').length}</div>
+                    <div className="text-xs text-muted-foreground mt-1">Sedang Berjalan</div>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-4">Tim Proyek</h3>
+            {/* Team Info */}
+            <div className="bg-background/80 rounded-lg p-6 backdrop-blur-sm">
+              <h3 className="text-base font-medium mb-4">Tim Proyek</h3>
               <div className="space-y-4">
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
-                    <UserCircle className="h-4 w-4" />
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                    <UserCircle className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-sm font-medium">{team.pm}</p>
@@ -225,8 +216,8 @@ const ProjectDetailPage = () => {
                 </div>
                 
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-success-100 flex items-center justify-center text-green-600 mr-3">
-                    <UserCircle className="h-4 w-4" />
+                  <div className="h-10 w-10 rounded-full bg-success-100 flex items-center justify-center text-green-600 mr-3">
+                    <UserCircle className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-sm font-medium">{team.waspang}</p>
@@ -235,8 +226,8 @@ const ProjectDetailPage = () => {
                 </div>
                 
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
-                    <UserCircle className="h-4 w-4" />
+                  <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+                    <UserCircle className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-sm font-medium">{team.admin}</p>
@@ -246,22 +237,22 @@ const ProjectDetailPage = () => {
               </div>
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
       
       {/* Navigation Tabs */}
       <Tabs defaultValue="overview" className="w-full" onValueChange={handleTabChange}>
-        <div className="flex items-center justify-between mb-6">
-          <TabsList className="grid grid-cols-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <TabsList className="grid grid-cols-4 w-full md:w-auto">
             <TabsTrigger value="overview">Ringkasan</TabsTrigger>
             <TabsTrigger value="milestones">Milestone</TabsTrigger>
-            <TabsTrigger value="reports">Laporan Harian</TabsTrigger>
+            <TabsTrigger value="reports">Laporan</TabsTrigger>
             <TabsTrigger value="documentation">Dokumentasi</TabsTrigger>
           </TabsList>
           
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             {activeTab !== 'overview' && (
-              <div className="relative w-56">
+              <div className="relative w-full md:w-56">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="text"
@@ -272,117 +263,74 @@ const ProjectDetailPage = () => {
                 />
               </div>
             )}
-            
-            {activeTab === 'milestones' && (
-              <Button size="sm">
-                <Plus className="mr-2 h-3.5 w-3.5" />
-                Tambah Milestone
-              </Button>
-            )}
-            
-            {activeTab === 'reports' && (
-              <Button size="sm">
-                <Plus className="mr-2 h-3.5 w-3.5" />
-                Buat Laporan
-              </Button>
-            )}
-            
-            {activeTab === 'documentation' && (
-              <Button size="sm">
-                <Upload className="mr-2 h-3.5 w-3.5" />
-                Upload Dokumen
-              </Button>
-            )}
           </div>
         </div>
         
         {/* Overview Tab */}
         <TabsContent value="overview">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Status Milestone</CardTitle>
+            <Card className="shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Milestone Terbaru</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex justify-between items-center space-x-2 pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-                    <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-4xl font-bold">{projectMilestones.filter(m => m.status === 'Selesai').length}</div>
-                      <div className="text-sm font-medium text-muted-foreground mt-1">Selesai</div>
-                    </div>
-                    <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-4xl font-bold">{projectMilestones.filter(m => m.status === 'Pada Jadwal' || m.status === 'Terlambat').length}</div>
-                      <div className="text-sm font-medium text-muted-foreground mt-1">Sedang Berjalan</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <h4 className="text-sm font-medium mb-3">Milestone Berikutnya</h4>
-                  {projectMilestones.filter(m => m.status === 'Pada Jadwal' || m.status === 'Terlambat').slice(0, 1).map((milestone) => (
-                    <div key={milestone.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <div className="font-medium">{milestone.name}</div>
-                        <div className="text-sm text-muted-foreground">Tenggat: {milestone.deadline}</div>
+                <div className="space-y-4">
+                  {projectMilestones.filter(m => m.status === 'Pada Jadwal' || m.status === 'Terlambat').slice(0, 2).map((milestone) => (
+                    <div key={milestone.id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        milestone.status === 'Selesai' ? 'bg-success-100' : 
+                        milestone.status === 'Pada Jadwal' ? 'bg-info-100' : 
+                        milestone.status === 'Terlambat' ? 'bg-amber-100' :
+                        'bg-muted/50-100'
+                      }`}>
+                        {getStatusIcon(milestone.status)}
                       </div>
-                      <div>{milestone.progress || 0}%</div>
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <h3 className="font-medium">{milestone.name}</h3>
+                          <div>{getStatusBadge(milestone.status)}</div>
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-1">Tenggat: {milestone.deadline}</div>
+                        <div className="mt-2">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span>Progress</span>
+                            <span>{milestone.progress || 0}%</span>
+                          </div>
+                          <Progress value={milestone.progress || 0} className="h-1.5" />
+                        </div>
+                      </div>
                     </div>
                   ))}
-                  <div className="mt-4">
-                    <Link 
-                      href="#" 
-                      onClick={(e) => { e.preventDefault(); setActiveTab('milestones'); }}
-                      className="text-sm text-primary hover:underline"
-                    >
-                      Lihat semua milestone
-                    </Link>
-                  </div>
+                  <Button variant="outline" className="w-full" onClick={() => setActiveTab('milestones')}>
+                    Lihat Semua Milestone
+                  </Button>
                 </div>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle>Aktivitas Terbaru</CardTitle>
+            <Card className="shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Aktivitas Terbaru</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {projectReports.slice(0, 2).map((report) => (
-                    <div key={report.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
-                      <div className="flex justify-between mb-1">
-                        <div className="font-medium">Laporan Harian</div>
-                        <div className="text-sm text-muted-foreground">{report.date}</div>
+                    <div key={report.id} className="p-3 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium">{report.title}</h3>
+                          <div className="text-sm text-muted-foreground mt-1">{report.date}</div>
+                        </div>
+                        <div>{getStatusBadge(report.status)}</div>
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                        {report.title}
-                      </p>
-                      <Link 
-                        href="#" 
-                        onClick={(e) => { e.preventDefault(); setActiveTab('reports'); }}
-                        className="text-xs text-primary hover:underline"
-                      >
-                        Lihat detail
-                      </Link>
+                      <div className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                        {report.activities[0]}
+                      </div>
                     </div>
                   ))}
-                  
-                  {projectDocuments.slice(0, 2).map((doc) => (
-                    <div key={doc.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
-                      <div className="flex justify-between mb-1">
-                        <div className="font-medium">Dokumentasi Baru</div>
-                        <div className="text-sm text-muted-foreground">{doc.uploadDate}</div>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {doc.name} ({doc.size})
-                      </p>
-                      <Link 
-                        href="#" 
-                        onClick={(e) => { e.preventDefault(); setActiveTab('documentation'); }}
-                        className="text-xs text-primary hover:underline"
-                      >
-                        Lihat dokumen
-                      </Link>
-                    </div>
-                  ))}
+                  <Button variant="outline" className="w-full" onClick={() => setActiveTab('reports')}>
+                    Lihat Semua Laporan
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -391,15 +339,16 @@ const ProjectDetailPage = () => {
         
         {/* Milestones Tab */}
         <TabsContent value="milestones">
-          <Card>
+          <Card className="shadow-sm">
             <CardContent className="p-6">
               <div className="space-y-6">
                 {filteredMilestones.length > 0 ? (
                   filteredMilestones.map((milestone) => (
-                    <div key={milestone.id} className="flex items-start gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
-                      <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    <div key={milestone.id} className="flex items-start gap-4 p-4 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         milestone.status === 'Selesai' ? 'bg-success-100' : 
-                        milestone.status === 'Pada Jadwal' || milestone.status === 'Terlambat' ? 'bg-info-100' : 
+                        milestone.status === 'Pada Jadwal' ? 'bg-info-100' : 
+                        milestone.status === 'Terlambat' ? 'bg-amber-100' :
                         'bg-muted/50-100'
                       }`}>
                         {getStatusIcon(milestone.status)}
@@ -419,9 +368,19 @@ const ProjectDetailPage = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             {getStatusBadge(milestone.status)}
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>Edit Milestone</DropdownMenuItem>
+                                <DropdownMenuItem>Update Progress</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Upload Dokumentasi</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </div>
                         <div className="mt-3">
@@ -472,12 +431,12 @@ const ProjectDetailPage = () => {
         
         {/* Reports Tab */}
         <TabsContent value="reports">
-          <Card>
+          <Card className="shadow-sm">
             <CardContent className="p-6">
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {filteredReports.length > 0 ? (
                   filteredReports.map((report) => (
-                    <div key={report.id} className="pb-8 border-b border-border last:border-0 last:pb-0">
+                    <div key={report.id} className="p-4 border rounded-lg hover:bg-muted/30 transition-colors">
                       <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                         <div>
                           <div className="flex items-center gap-2">
@@ -495,38 +454,47 @@ const ProjectDetailPage = () => {
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                        <div>
-                          <h4 className="text-sm font-medium mb-2">Aktivitas</h4>
-                          <ul className="space-y-2">
+                        <div className="bg-muted/30 p-3 rounded-md">
+                          <h4 className="text-sm font-medium mb-2 flex items-center">
+                            <Check className="h-4 w-4 text-green-500 mr-2" />
+                            Aktivitas
+                          </h4>
+                          <ul className="text-sm space-y-1">
                             {report.activities.map((activity, idx) => (
-                              <li key={idx} className="text-sm flex gap-2">
-                                <span className="text-muted-foreground">•</span>
+                              <li key={idx} className="flex items-start">
+                                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 mr-2 flex-shrink-0"></span>
                                 <span>{activity}</span>
                               </li>
                             ))}
                           </ul>
                         </div>
                         
-                        <div>
-                          <h4 className="text-sm font-medium mb-2">Kendala</h4>
-                          <ul className="space-y-2">
+                        <div className="bg-muted/30 p-3 rounded-md">
+                          <h4 className="text-sm font-medium mb-2 flex items-center">
+                            <AlertCircle className="h-4 w-4 text-amber-500 mr-2" />
+                            Kendala
+                          </h4>
+                          <ul className="text-sm space-y-1">
                             {report.issues && report.issues.length > 0 ? (
                               report.issues.map((issue, idx) => (
-                                <li key={idx} className="text-sm flex gap-2">
-                                  <span className="text-muted-foreground">•</span>
+                                <li key={idx} className="flex items-start">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mt-1.5 mr-2 flex-shrink-0"></span>
                                   <span>{issue}</span>
                                 </li>
                               ))
                             ) : (
-                              <li className="text-sm text-muted-foreground">Tidak ada kendala</li>
+                              <li className="text-muted-foreground">Tidak ada kendala</li>
                             )}
                           </ul>
                         </div>
                       </div>
                       
-                      <div>
-                        <h4 className="text-sm font-medium mb-2">Rencana Selanjutnya</h4>
-                        <p className="text-sm text-muted-foreground">{report.nextPlan}</p>
+                      <div className="bg-muted/30 p-3 rounded-md">
+                        <h4 className="text-sm font-medium mb-2 flex items-center">
+                          <Calendar className="h-4 w-4 text-blue-500 mr-2" />
+                          Rencana Selanjutnya
+                        </h4>
+                        <p className="text-sm">{report.nextPlan}</p>
                       </div>
                     </div>
                   ))
@@ -546,7 +514,7 @@ const ProjectDetailPage = () => {
         
         {/* Documentation Tab */}
         <TabsContent value="documentation">
-          <Card>
+          <Card className="shadow-sm">
             <CardContent className="p-6">
               <div className="space-y-4">
                 {filteredDocuments.length > 0 ? (
