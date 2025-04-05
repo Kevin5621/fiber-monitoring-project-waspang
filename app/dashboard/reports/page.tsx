@@ -1,12 +1,11 @@
 "use client"
 
 import React, { useState } from 'react';
-import { Calendar, Check, ClipboardList, Clock, FileText, Filter, MoreHorizontal, Plus, Search, AlertCircle, CalendarIcon } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Calendar, Check, ClipboardList, Clock, FileText, MoreHorizontal, Plus, Search, AlertCircle, CalendarIcon } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
 import { 
   Select, 
   SelectContent, 
@@ -28,7 +27,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { dailyReports } from '@/data/project/reports';
 import { projects } from '@/data/project/projects';
 
@@ -38,6 +37,8 @@ const ReportsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterDate, setFilterDate] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
   
   // Use centralized data from reports.ts
   const reports = dailyReports;
@@ -64,6 +65,11 @@ const ReportsPage = () => {
         report.activities.some(act => act.toLowerCase().includes(query))
       );
     });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedReports = filteredReports.slice(startIndex, startIndex + itemsPerPage);
 
   // Menghitung laporan berdasarkan status
   const approvedCount = reports.filter(r => r.status === 'approved').length;
@@ -104,247 +110,293 @@ const ReportsPage = () => {
   const dates = Object.keys(reportsByDate).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
   return (
-    <div className="space-y-6">
-      {/* Page Title */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Laporan Harian</h2>
-          <p className="text-muted-foreground">Kelola dan pantau laporan kemajuan harian proyek</p>
-        </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Buat Laporan
-        </Button>
-      </div>
-
-      {/* Status Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium">Total Laporan</h3>
-              <span className="text-2xl font-bold">{reports.length}</span>
-            </div>
-            <Progress value={100} className="h-2" />
+    <div className="container mx-auto p-4 sm:p-6 relative">
+      {/* Status Overview - Simplified without progress bars */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <Card className="shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center">
+            <h3 className="text-sm font-medium mb-1">Total Laporan</h3>
+            <span className="text-3xl font-bold">{reports.length}</span>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium">Disetujui</h3>
-              <span className="text-2xl font-bold">{approvedCount}</span>
-            </div>
-            <Progress value={approvedCount / reports.length * 100} className="h-2 bg-muted" />
+        <Card className="shadow-sm hover:shadow-md transition-shadow bg-green-50 dark:bg-green-900/20">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center">
+            <h3 className="text-sm font-medium mb-1">Disetujui</h3>
+            <span className="text-3xl font-bold text-green-600 dark:text-green-400">{approvedCount}</span>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium">Dalam Peninjauan</h3>
-              <span className="text-2xl font-bold">{inReviewCount}</span>
-            </div>
-            <Progress value={inReviewCount / reports.length * 100} className="h-2 bg-muted" />
+        <Card className="shadow-sm hover:shadow-md transition-shadow bg-blue-50 dark:bg-blue-900/20">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center">
+            <h3 className="text-sm font-medium mb-1">Dalam Peninjauan</h3>
+            <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">{inReviewCount}</span>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium">Ditolak</h3>
-              <span className="text-2xl font-bold">{rejectedCount}</span>
-            </div>
-            <Progress value={rejectedCount / reports.length * 100} className="h-2 bg-muted" />
+        <Card className="shadow-sm hover:shadow-md transition-shadow bg-red-50 dark:bg-red-900/20">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center">
+            <h3 className="text-sm font-medium mb-1">Ditolak</h3>
+            <span className="text-3xl font-bold text-red-600 dark:text-red-400">{rejectedCount}</span>
           </CardContent>
         </Card>
       </div>
 
       {/* Tabs for Report Views */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <TabsList className="grid grid-cols-5">
-            <TabsTrigger value="all">Semua</TabsTrigger>
-            <TabsTrigger value="approved">Disetujui</TabsTrigger>
-            <TabsTrigger value="pending">Dalam Peninjauan</TabsTrigger>
-            <TabsTrigger value="rejected">Ditolak</TabsTrigger>
-            <TabsTrigger value="draft">Draft</TabsTrigger>
-          </TabsList>
-          
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Select
-              value={filterProject}
-              onValueChange={(value) => setFilterProject(value)}
-            >
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Filter Proyek" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Proyek</SelectItem>
-                {projects.map(project => (
-                  <SelectItem key={project.id} value={project.id.toString()}>{project.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Cari laporan..."
-                className="pl-8"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+      <Card className="shadow-sm mb-8">
+        <CardContent className="p-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <TabsList className="grid grid-cols-5 rounded-lg bg-muted/60">
+                <TabsTrigger value="all">Semua</TabsTrigger>
+                <TabsTrigger value="approved">Disetujui</TabsTrigger>
+                <TabsTrigger value="pending">Dalam Peninjauan</TabsTrigger>
+                <TabsTrigger value="rejected">Ditolak</TabsTrigger>
+                <TabsTrigger value="draft">Draft</TabsTrigger>
+              </TabsList>
+              
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Select
+                  value={filterProject}
+                  onValueChange={(value) => setFilterProject(value)}
+                >
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue placeholder="Filter Proyek" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Proyek</SelectItem>
+                    {projects.map(project => (
+                      <SelectItem key={project.id} value={project.id.toString()}>{project.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Cari laporan..."
+                    className="pl-8"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        
-        {/* Tab Content */}
-        <TabsContent value={activeTab} className="space-y-6">
-          <Tabs defaultValue="list" className="w-full">
-            <TabsList className="w-full max-w-[400px] mb-6">
-              <TabsTrigger value="list" className="flex-1">
-                <ClipboardList className="mr-2 h-4 w-4" />
-                List
-              </TabsTrigger>
-              <TabsTrigger value="timeline" className="flex-1">
-                <Calendar className="mr-2 h-4 w-4" />
-                Timeline
-              </TabsTrigger>
-            </TabsList>
             
-            {/* List View */}
-            <TabsContent value="list" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Laporan Harian</CardTitle>
-                  <CardDescription>
-                    Menampilkan {filteredReports.length} dari {reports.length} laporan
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {filteredReports.length > 0 ? (
-                      filteredReports.map((report) => (
-                        <div key={report.id} className="flex flex-col border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors">
-                          <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
-                            <div>
-                              <h3 className="text-base font-medium">{report.title}</h3>
-                              <Link 
-                                href={`/dashboard/project/${report.projectId}`}
-                                className="text-sm text-muted-foreground hover:underline"
-                              >
-                                {report.project}
-                              </Link>
+            {/* Tab Content */}
+            <TabsContent value={activeTab} className="space-y-6 pt-4">
+              <Tabs defaultValue="list" className="w-full">
+                <TabsList className="w-full max-w-[400px] mb-6 bg-background border">
+                  <TabsTrigger value="list" className="flex-1 data-[state=active]:bg-muted">
+                    <ClipboardList className="mr-2 h-4 w-4" />
+                    List
+                  </TabsTrigger>
+                  <TabsTrigger value="timeline" className="flex-1 data-[state=active]:bg-muted">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Timeline
+                  </TabsTrigger>
+                </TabsList>
+                
+                {/* List View */}
+                <TabsContent value="list" className="space-y-4">
+                  <div>
+                    <div className="space-y-4">
+                      {paginatedReports.length > 0 ? (
+                        <>
+                          {paginatedReports.map((report) => (
+                            <div key={report.id} className="flex flex-col border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors shadow-sm hover:shadow-md">
+                              <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
+                                <div>
+                                  <h3 className="text-base font-medium">{report.title}</h3>
+                                  <Link 
+                                    href={`/dashboard/project/${report.projectId}`}
+                                    className="text-sm text-muted-foreground hover:underline"
+                                  >
+                                    {report.project}
+                                  </Link>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {getStatusBadge(report.status)}
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuItem>
+                                        <FileText className="mr-2 h-4 w-4" />
+                                        Lihat Detail
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem>
+                                        <Check className="mr-2 h-4 w-4" />
+                                        Setujui Laporan
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem>
+                                        <Calendar className="mr-2 h-4 w-4" />
+                                        Histori Revisi
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
+                              </div>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div className="bg-muted/30 p-3 rounded-md">
+                                  <h4 className="text-sm font-medium mb-2 flex items-center">
+                                    <Check className="h-4 w-4 text-green-500 mr-2" />
+                                    Aktivitas
+                                  </h4>
+                                  <ul className="text-sm space-y-1">
+                                    {report.activities.map((activity, idx) => (
+                                      <li key={idx} className="flex items-start">
+                                        <span className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 mr-2 flex-shrink-0"></span>
+                                        <span>{activity}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                
+                                <div className="bg-muted/30 p-3 rounded-md">
+                                  <h4 className="text-sm font-medium mb-2 flex items-center">
+                                    <AlertCircle className="h-4 w-4 text-amber-500 mr-2" />
+                                    Kendala
+                                  </h4>
+                                  <ul className="text-sm space-y-1">
+                                    {report.issues.length > 0 ? (
+                                      report.issues.map((issue, idx) => (
+                                        <li key={idx} className="flex items-start">
+                                          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mt-1.5 mr-2 flex-shrink-0"></span>
+                                          <span>{issue}</span>
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <li className="text-muted-foreground">Tidak ada kendala</li>
+                                    )}
+                                  </ul>
+                                </div>
+                                
+                                <div className="bg-muted/30 p-3 rounded-md">
+                                  <h4 className="text-sm font-medium mb-2 flex items-center">
+                                    <Calendar className="h-4 w-4 text-blue-500 mr-2" />
+                                    Rencana Selanjutnya
+                                  </h4>
+                                  <p className="text-sm">{report.nextPlan}</p>
+                                </div>
+                              </div>
+                              
+                              <div className="flex flex-wrap items-center justify-between mt-2 pt-3 border-t border-border text-sm text-muted-foreground">
+                                <div className="flex items-center">
+                                  <Avatar className="h-6 w-6 mr-2">
+                                    <AvatarFallback>{getInitials(report.submittedBy)}</AvatarFallback>
+                                  </Avatar>
+                                  <span>{report.submittedBy}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <span className="flex items-center">
+                                    <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
+                                    {report.date}
+                                  </span>
+                                  <span className="flex items-center">
+                                    <Clock className="h-3.5 w-3.5 mr-1.5" />
+                                    {report.submittedAt}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
+                          ))}
+                          
+                          {/* Pagination Controls */}
+                          <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-border gap-4">
                             <div className="flex items-center gap-2">
-                              {getStatusBadge(report.status)}
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem>
-                                    <FileText className="mr-2 h-4 w-4" />
-                                    Lihat Detail
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <Check className="mr-2 h-4 w-4" />
-                                    Setujui Laporan
-                                  </DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem>
-                                    <Calendar className="mr-2 h-4 w-4" />
-                                    Histori Revisi
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                              <h4 className="text-sm font-medium mb-2">Aktivitas</h4>
-                              <ul className="text-sm space-y-1">
-                                {report.activities.map((activity, idx) => (
-                                  <li key={idx} className="flex items-start">
-                                    <Check className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-                                    <span>{activity}</span>
-                                  </li>
-                                ))}
-                              </ul>
+                              <span className="text-sm text-muted-foreground">
+                                Menampilkan {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredReports.length)} dari {filteredReports.length} laporan
+                              </span>
+                              <Select
+                                value={itemsPerPage.toString()}
+                                onValueChange={(value) => {
+                                  setItemsPerPage(Number(value));
+                                  setCurrentPage(1);
+                                }}
+                              >
+                                <SelectTrigger className="w-[120px] h-8">
+                                  <SelectValue placeholder="Tampilkan" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="5">5 per halaman</SelectItem>
+                                  <SelectItem value="10">10 per halaman</SelectItem>
+                                  <SelectItem value="20">20 per halaman</SelectItem>
+                                  <SelectItem value="50">50 per halaman</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </div>
                             
-                            <div>
-                              <h4 className="text-sm font-medium mb-2">Kendala</h4>
-                              <ul className="text-sm space-y-1">
-                                {report.issues.length > 0 ? (
-                                  report.issues.map((issue, idx) => (
-                                    <li key={idx} className="flex items-start">
-                                      <AlertCircle className="h-4 w-4 text-amber-500 mr-2 mt-0.5" />
-                                      <span>{issue}</span>
-                                    </li>
-                                  ))
-                                ) : (
-                                  <li className="text-muted-foreground">Tidak ada kendala</li>
-                                )}
-                              </ul>
-                            </div>
-                            
-                            <div>
-                              <h4 className="text-sm font-medium mb-2">Rencana Selanjutnya</h4>
-                              <p className="text-sm">{report.nextPlan}</p>
+                            <div className="flex items-center gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => setCurrentPage(1)}
+                                disabled={currentPage === 1}
+                              >
+                                Pertama
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="icon"
+                                className="h-8 w-8" 
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                              </Button>
+                              
+                              <div className="flex items-center">
+                                <span className="text-sm font-medium mx-2">
+                                  {currentPage} dari {totalPages}
+                                </span>
+                              </div>
+                              
+                              <Button 
+                                variant="outline" 
+                                size="icon"
+                                className="h-8 w-8" 
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => setCurrentPage(totalPages)}
+                                disabled={currentPage === totalPages}
+                              >
+                                Terakhir
+                              </Button>
                             </div>
                           </div>
-                          
-                          <div className="flex flex-wrap items-center justify-between mt-2 pt-3 border-t border-border text-sm text-muted-foreground">
-                            <div className="flex items-center">
-                              <Avatar className="h-6 w-6 mr-2">
-                                <AvatarFallback>{getInitials(report.submittedBy)}</AvatarFallback>
-                              </Avatar>
-                              <span>{report.submittedBy}</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="flex items-center">
-                                <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
-                                {report.date}
-                              </span>
-                              <span className="flex items-center">
-                                <Clock className="h-3.5 w-3.5 mr-1.5" />
-                                {report.submittedAt}
-                              </span>
-                            </div>
-                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center py-12 bg-muted/20 rounded-lg">
+                          <ClipboardList className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                          <h3 className="text-lg font-medium mb-2">Tidak ada laporan ditemukan</h3>
+                          <p className="text-muted-foreground max-w-sm mx-auto">
+                            Tidak ada laporan yang sesuai dengan filter yang dipilih. Coba ubah filter atau buat laporan baru.
+                          </p>
+                          <Button className="mt-4">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Buat Laporan
+                          </Button>
                         </div>
-                      ))
-                    ) : (
-                      <div className="text-center py-12">
-                        <ClipboardList className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-lg font-medium mb-2">Tidak ada laporan ditemukan</h3>
-                        <p className="text-muted-foreground max-w-sm mx-auto">
-                          Tidak ada laporan yang sesuai dengan filter yang dipilih. Coba ubah filter atau buat laporan baru.
-                        </p>
-                        <Button className="mt-4">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Buat Laporan
-                        </Button>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            {/* Timeline View */}
-            <TabsContent value="timeline" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Timeline Laporan</CardTitle>
-                </CardHeader>
-                <CardContent>
+                </TabsContent>
+                
+                {/* Timeline View */}
+                <TabsContent value="timeline" className="space-y-4">
                   {dates.length > 0 ? (
                     <div className="relative pl-6 border-l border-border space-y-8">
                       {dates.map((date) => (
@@ -358,7 +410,7 @@ const ReportsPage = () => {
                           </div>
                           <div className="space-y-4">
                             {reportsByDate[date].map((report) => (
-                              <div key={report.id} className="border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors">
+                              <div key={report.id} className="border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors shadow-sm hover:shadow-md">
                                 <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
                                   <div>
                                     <h3 className="text-base font-medium">{report.title}</h3>
@@ -390,7 +442,7 @@ const ReportsPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 bg-muted/20 rounded-lg">
                       <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                       <h3 className="text-lg font-medium mb-2">Tidak ada laporan ditemukan</h3>
                       <p className="text-muted-foreground max-w-sm mx-auto">
@@ -398,12 +450,20 @@ const ReportsPage = () => {
                       </p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </TabsContent>
+              </Tabs>
             </TabsContent>
           </Tabs>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* Floating Action Button */}
+      <Button 
+        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-shadow z-10"
+        size="icon"
+      >
+        <Plus className="h-6 w-6" />
+      </Button>
     </div>
   );
 };
