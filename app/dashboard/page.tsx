@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, FileText, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, FileText, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,18 +9,19 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { MilestoneChart } from '@/components/dashboard/milestone/MilestoneChart';
-import { StatCard } from '@/components/dashboard/StatCard';
 import { PriorityTaskCard } from '@/components/dashboard/PriorityTaskCard';
 import { DocumentCard } from '@/components/dashboard/DocumentCard';
 import { ActivityItem } from '@/components/dashboard/ActivityItem';
+import { StatCard, StatProps } from '@/components/dashboard/StatCard';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
 import { mockData } from '@/data/dashboardData';
-import { StatProps, PriorityTaskProps, MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
+import { PriorityTaskProps, MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
 
 // Define the dashboard data type
 interface DashboardData {
   priorityTasks: PriorityTaskProps['task'][];
   stats: StatProps[];
+  mobileStats: StatProps[];
   milestones: MilestoneProps['milestone'][];
   documents: DocumentProps['doc'][];
   activities: ActivityProps['activity'][];
@@ -44,7 +45,7 @@ const DashboardPage = () => {
   }
 
   // Destructure data after it's available
-  const { priorityTasks, stats, milestones, documents, activities } = dashboardData;
+  const { priorityTasks, stats, mobileStats, milestones, documents, activities } = dashboardData;
 
   return (
     <div className="container mx-auto p-4 sm:p-6">
@@ -62,9 +63,16 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+      {/* Stats Overview - Desktop */}
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4 mb-6">
         {stats.map((stat: StatProps, i: number) => (
+          <StatCard key={i} stat={stat} />
+        ))}
+      </div>
+
+      {/* Stats Overview - Mobile */}
+      <div className="grid grid-cols-3 gap-2 mb-4 sm:hidden">
+        {mobileStats.map((stat: StatProps, i: number) => (
           <StatCard key={i} stat={stat} />
         ))}
       </div>

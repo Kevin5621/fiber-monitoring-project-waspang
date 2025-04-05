@@ -1,6 +1,7 @@
-import { Clock, FileText, Folder, CheckCircle, AlertCircle } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, BarChart3, FileCheck, ClipboardList } from 'lucide-react';
 import React from 'react';
-import { StatProps, PriorityTaskProps, MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
+import { PriorityTaskProps, MilestoneProps, DocumentProps, ActivityProps } from '@/components/dashboard/types';
+import { StatProps } from '@/components/dashboard/StatCard';
 
 export const mockData = (currentDate: Date) => {
   const priorityTasks: PriorityTaskProps['task'][] = [
@@ -27,27 +28,6 @@ export const mockData = (currentDate: Date) => {
       project: 'Fiber Optik Tebet', 
       badge: 'Dokumentasi', 
       badgeVariant: 'outline' as const
-    }
-  ];
-
-  const stats: StatProps[] = [
-    { 
-      title: 'Proyek Aktif', 
-      value: '3', 
-      icon: React.createElement(Folder, { className: "h-5 w-5" }), 
-      color: 'primary',
-    },
-    { 
-      title: 'Milestone', 
-      value: '2', 
-      icon: React.createElement(Clock, { className: "h-5 w-5" }), 
-      color: 'warning',
-    },
-    { 
-      title: 'Dokumentasi Tertunda', 
-      value: '5', 
-      icon: React.createElement(FileText, { className: "h-5 w-5" }), 
-      color: 'destructive',
     }
   ];
 
@@ -146,9 +126,78 @@ export const mockData = (currentDate: Date) => {
     { action: 'Milestone selesai', time: 'Kemarin, 10:15', project: 'Fiber Optik Menteng' }
   ];
 
+  // Calculate stats based on the data
+  const totalMilestones = milestones.length;
+  // Update the completion criteria to match the logic in MilestoneFooter component
+  const completedMilestones = milestones.filter(m => 
+    m.status === 'Selesai' || m.uploadedDocs >= m.requiredDocs
+  ).length;
+  const inProgressMilestones = milestones.filter(m => 
+    (m.status === 'Pada Jadwal' || m.status === 'Terlambat') && 
+    m.uploadedDocs
+  ).length;
+  
+  const pendingDocuments = documents.length;
+  const documentsUploaded = milestones.reduce((total, milestone) => total + milestone.uploadedDocs, 0);
+  const totalRequiredDocs = milestones.reduce((total, milestone) => total + milestone.requiredDocs, 0);
+
+  // Check if daily report has been submitted today
+  const todayReportSubmitted = activities.some(activity => 
+    activity.action.includes('Laporan harian') && 
+    activity.time.includes('jam lalu')
+  );
+
+  // Stats for the dashboard
+  const stats: StatProps[] = [
+    {
+      title: 'Milestone Proyek',
+      value: `${completedMilestones}/${totalMilestones}`,
+      description: `${inProgressMilestones} sedang berjalan`,
+      icon: React.createElement(BarChart3, { className: "h-5 w-5" }),
+      color: 'primary'
+    },
+    {
+      title: 'Laporan Harian',
+      value: todayReportSubmitted ? 'Terkirim' : 'Belum Dibuat',
+      description: 'Status laporan hari ini',
+      icon: React.createElement(ClipboardList, { className: "h-5 w-5" }),
+      color: todayReportSubmitted ? 'success' : 'warning'
+    },
+    {
+      title: 'Dokumentasi',
+      value: `${documentsUploaded}/${totalRequiredDocs}`,
+      description: `${pendingDocuments} dokumen dibutuhkan`,
+      icon: React.createElement(FileCheck, { className: "h-5 w-5" }),
+      color: 'warning'
+    }
+  ];
+
+  // Mobile-optimized stats (single row)
+  const mobileStats: StatProps[] = [
+    {
+      title: 'Milestone',
+      value: `${completedMilestones}/${totalMilestones}`,
+      icon: React.createElement(BarChart3, { className: "h-4 w-4" }),
+      color: 'primary'
+    },
+    {
+      title: 'Laporan',
+      value: todayReportSubmitted ? '✓' : '✗',
+      icon: React.createElement(ClipboardList, { className: "h-4 w-4" }),
+      color: todayReportSubmitted ? 'success' : 'warning'
+    },
+    {
+      title: 'Dokumen',
+      value: `${documentsUploaded}/${totalRequiredDocs}`,
+      icon: React.createElement(FileCheck, { className: "h-4 w-4" }),
+      color: 'warning'
+    }
+  ];
+
   return {
     priorityTasks,
     stats,
+    mobileStats,
     milestones,
     documents,
     activities

@@ -1,13 +1,5 @@
 import { ReactNode, ReactElement } from 'react';
 
-// Stat Card Types
-export interface StatProps {
-  title: string;
-  value: string;
-  icon: ReactElement;
-  color: string;
-}
-
 // Priority Task Types
 export interface PriorityTaskProps {
     task: {
