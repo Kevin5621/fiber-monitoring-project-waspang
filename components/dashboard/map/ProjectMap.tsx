@@ -1,36 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-
-import { ProjectLocation } from '@/data/dashboardData';
-
-// Move all Leaflet imports and related code inside the client component
-// This ensures they only run in the browser
-
-// Define types outside to be used by both the dynamic component and its props
-// Area classification for projects
-interface ProjectArea {
-  id: string;
-  name: string;
-  center: [number, number];
-  zoom: number;
-  projects: number[]; // Array of project IDs in this area
-}
-
-// Define cable connection type
-interface CableConnection {
-  id: string;
-  from: number; // Project location ID
-  to: number; // Project location ID
-  status: 'documented' | 'undocumented';
-  milestoneId: number;
-}
-
-interface ProjectMapProps {
-  className?: string;
-  projectLocations: ProjectLocation[];
-  milestones?: any[]; // Optional milestone data
-}
+import { ProjectMapProps } from '@/components/dashboard/types';
 
 // Create a loading component
 const MapLoading = () => (

@@ -1,12 +1,6 @@
 import React from 'react';
 import { ProjectLocation } from '@/data/dashboardData';
-
-interface LocationFiltersProps {
-  projectLocations: ProjectLocation[];
-  selectedArea: string | null;
-  setSelectedArea: (area: string | null) => void;
-  navigateMap: (action: string, params: any) => void;
-}
+import { LocationFiltersProps } from '@/components/dashboard/types';
 
 // Helper function to get area code from area name
 export const getAreaCode = (areaName: string): string => {

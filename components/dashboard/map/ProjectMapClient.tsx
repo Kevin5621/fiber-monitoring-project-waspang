@@ -9,38 +9,12 @@ import { Filter } from 'lucide-react';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import { ProjectLocation } from '@/data/dashboardData';
-
-// Area classification for projects
-interface ProjectArea {
-  id: string;
-  name: string;
-  center: [number, number];
-  zoom: number;
-  projects: number[]; // Array of project IDs in this area
-}
-
-// Define cable connection type
-interface CableConnection {
-  id: string;
-  from: number; // Project location ID
-  to: number; // Project location ID
-  isDocumented: boolean;
-  milestoneId: number;
-}
-
-// Define filter options
-interface FilterOptions {
-  area: string | null;
-  category: string | null;
-  documentationStatus: boolean | null;
-}
-
-interface ProjectMapProps {
-  className?: string;
-  projectLocations: ProjectLocation[];
-  milestones?: any[]; // Optional milestone data
-}
+import { 
+  ProjectArea, 
+  CableConnection, 
+  FilterOptions, 
+  ProjectMapProps 
+} from '@/components/dashboard/types';
 
 // Fix for Leaflet icon in Next.js
 const fixLeafletIcon = () => {
