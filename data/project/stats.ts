@@ -13,14 +13,13 @@ export const calculateStats = (
   // Calculate stats based on the centralized data
   const totalMilestones = milestones.length;
   
-  // Update the completion criteria to match the logic in MilestoneFooter component
+  // Update the completion criteria to only check uploaded documents
   const completedMilestones = milestones.filter(m => 
-    m.status === 'Selesai' || m.uploadedDocs >= m.requiredDocs
+    m.uploadedDocs >= m.requiredDocs
   ).length;
   
   const inProgressMilestones = milestones.filter(m => 
-    (m.status === 'Pada Jadwal' || m.status === 'Terlambat') && 
-    m.uploadedDocs > 0
+    m.uploadedDocs > 0 && m.uploadedDocs < m.requiredDocs
   ).length;
   
   const pendingDocuments = documents.length;
@@ -102,7 +101,7 @@ export const getProjectStats = (projectId: number) => {
   const projectMilestones = milestones.filter(m => m.projectId === projectId);
   const totalMilestones = projectMilestones.length;
   const completedMilestones = projectMilestones.filter(m => 
-    m.status === 'Selesai' || m.uploadedDocs >= m.requiredDocs
+    m.uploadedDocs >= m.requiredDocs
   ).length;
   
   // Filter documents by project

@@ -9,7 +9,6 @@ export interface MilestoneProps {
     project: string;
     deadline: string;
     startDate: string;
-    status: 'Pada Jadwal' | 'Terlambat' | 'Selesai' | 'Belum Dimulai' | string;
     icon: ReactNode;
     description?: string;
     // Document tracking properties

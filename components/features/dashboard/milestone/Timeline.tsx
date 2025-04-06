@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown, ChevronUp, Calendar, Clock, CheckCircle, XCircle, AlertCircle, FileCheck } from 'lucide-react';
+import { ChevronDown, ChevronUp, Calendar, Clock, FileCheck } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 
 interface MobileTimelineProps {
@@ -21,66 +21,32 @@ export const TimelineCard: React.FC<MobileTimelineProps> = ({
   getMilestoneStatus,
   formatDate
 }) => {
-  // Helper function to get status icon and color
-  const getStatusIconAndColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return { 
-          icon: <CheckCircle className="h-4 w-4" />, 
-          color: 'text-success',
-          bgColor: 'bg-success',
-          lightBgColor: 'bg-success/10',
-          borderColor: 'border-l-success'
-        };
-      case 'in-progress':
-        return { 
-          icon: <Clock className="h-4 w-4" />, 
-          color: 'text-warning',
-          bgColor: 'bg-warning',
-          lightBgColor: 'bg-warning/10',
-          borderColor: 'border-l-warning'
-        };
-      case 'late':
-        return { 
-          icon: <AlertCircle className="h-4 w-4" />, 
-          color: 'text-destructive',
-          bgColor: 'bg-destructive',
-          lightBgColor: 'bg-destructive/10',
-          borderColor: 'border-l-destructive'
-        };
-      default:
-        return { 
-          icon: <XCircle className="h-4 w-4" />, 
-          color: 'text-muted-foreground',
-          bgColor: 'bg-muted',
-          lightBgColor: 'bg-muted/50',
-          borderColor: 'border-l-muted'
-        };
-    }
+  // Helper function to get color based on document completion percentage
+  const getDocumentCompletionColor = (uploadedDocs: number, requiredDocs: number) => {
+    const percentage = (uploadedDocs / requiredDocs) * 100;
+    
+    if (percentage >= 100) return 'text-success bg-success/10';
+    if (percentage >= 50) return 'text-warning bg-warning/10';
+    return 'text-destructive bg-destructive/10';
   };
   
-  // Helper function to get status label
-  const getStatusLabel = (status: string, progress: number) => {
-    switch (status) {
-      case 'completed':
-        return 'Selesai';
-      case 'in-progress':
-        return `Sedang Berjalan (${progress}%)`;
-      case 'late':
-        return 'Terlambat';
-      default:
-        return 'Belum Dimulai';
-    }
+  // Helper function to get border color based on document completion
+  const getDocumentBorderColor = (uploadedDocs: number, requiredDocs: number) => {
+    const percentage = (uploadedDocs / requiredDocs) * 100;
+    
+    if (percentage >= 100) return 'border-l-success';
+    if (percentage >= 50) return 'border-l-warning';
+    return 'border-l-destructive';
   };
 
   return (
     <div className="space-y-4">
       {milestones.map((milestone) => {
         const currentMilestone = editedMilestones[milestone.id] || milestone;
-        const progress = getMilestoneProgress(currentMilestone);
-        const status = getMilestoneStatus(currentMilestone);
         const isExpanded = expandedMilestones[milestone.id] || false;
-        const { icon, color, bgColor, lightBgColor, borderColor } = getStatusIconAndColor(status);
+        const docsPercentage = Math.round((currentMilestone.uploadedDocs / currentMilestone.requiredDocs) * 100);
+        const circleColor = getDocumentCompletionColor(currentMilestone.uploadedDocs, currentMilestone.requiredDocs);
+        const borderColor = getDocumentBorderColor(currentMilestone.uploadedDocs, currentMilestone.requiredDocs);
         
         return (
           <div 
@@ -93,15 +59,15 @@ export const TimelineCard: React.FC<MobileTimelineProps> = ({
               onClick={() => toggleMilestoneExpansion(milestone.id)}
             >
               <div className="flex items-center space-x-3">
-                <div className={`flex items-center justify-center h-9 w-9 rounded-full ${lightBgColor}`}>
-                  <span className={color}>
-                    {icon}
-                  </span>
+                {/* Circular progress indicator */}
+                <div className={`relative flex items-center justify-center h-9 w-9 rounded-full ${circleColor}`}>
+                  <span className="text-xs font-medium">{docsPercentage}%</span>
                 </div>
                 <div>
                   <h3 className="font-medium text-sm">{currentMilestone.name}</h3>
-                  <p className={`text-xs flex items-center ${color}`}>
-                    {getStatusLabel(status, progress)}
+                  <p className="text-xs flex items-center text-muted-foreground">
+                    <FileCheck className="h-3 w-3 mr-1" />
+                    <span>{currentMilestone.uploadedDocs}/{currentMilestone.requiredDocs} dokumen</span>
                   </p>
                 </div>
               </div>

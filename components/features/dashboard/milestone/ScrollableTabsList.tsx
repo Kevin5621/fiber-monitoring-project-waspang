@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 
 interface ScrollableTabsListProps {
   tabsListRef: React.RefObject<HTMLDivElement>;
@@ -84,29 +84,54 @@ export const ScrollableTabsList: React.FC<ScrollableTabsListProps> = ({
           </button>
         )}
         
-        {/* Scrollable TabsList with improved styling */}
-        <div className="w-full overflow-hidden rounded-lg border border-border/40 shadow-sm">
+        {/* Chrome-style TabsList */}
+        <div className="w-full overflow-hidden bg-card rounded-t-lg">
           <TabsList 
             ref={tabsListRef} 
-            className="flex flex-nowrap overflow-x-auto scrollbar-hide py-1 px-2 w-full bg-card"
+            className="flex flex-nowrap overflow-x-auto scrollbar-hide pt-2 px-1 w-full bg-card min-h-12"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {projectNames.map(project => (
-              <TabsTrigger 
-                key={project} 
-                value={project}
-                onClick={() => handleTabClick(project)}
-                className="text-sm font-medium whitespace-nowrap flex-shrink-0 transition-all px-4 py-2 mx-1 rounded-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                data-value={project}
-              >
-                <div className="flex items-center gap-2">
-                  {currentValue === project && (
-                    <Check className="h-3.5 w-3.5" />
+            {projectNames.map((project, index) => {
+              const isActive = currentValue === project;
+              return (
+                <TabsTrigger 
+                  key={project} 
+                  value={project}
+                  onClick={() => handleTabClick(project)}
+                  className={`
+                    group relative rounded-t-lg text-sm font-medium whitespace-nowrap flex-shrink-0 
+                    border-t border-l border-r border-border/40
+                    transition-all mx-0 px-4 py-2 h-10
+                    ${isActive 
+                      ? 'bg-primary/5 text-primary border-t-2 border-t-primary z-10' 
+                      : 'bg-muted/30 hover:bg-muted/50'
+                    }
+                  `}
+                  data-value={project}
+                >
+                  <div className="flex items-center gap-2">
+                    {project}
+                    {isActive && (
+                      <div className="flex items-center justify-center ml-1 h-5 w-5 rounded-full bg-primary/10 hover:bg-primary/20">
+                        <X className="h-3 w-3 text-primary" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Chrome-style sloped edges effect */}
+                  {!isActive && index > 0 && (
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-card -translate-x-1"></div>
                   )}
-                  {project}
-                </div>
-              </TabsTrigger>
-            ))}
+                  
+                  {/* Active tab highlight effect */}
+                  {isActive && (
+                    <div className="absolute left-0 right-0 bottom-0 h-1 bg-primary"></div>
+                  )}
+                </TabsTrigger>
+              );
+            })}
+            {/* Empty space tab to fill remainder */}
+            <div className="flex-grow border-b border-border/40 h-10"></div>
           </TabsList>
         </div>
         
@@ -124,22 +149,8 @@ export const ScrollableTabsList: React.FC<ScrollableTabsListProps> = ({
         )}
       </div>
       
-      {/* Optional indicator line showing active tab */}
-      <div className="hidden sm:block h-0.5 w-full mt-1 bg-muted overflow-hidden">
-        {projectNames.map((project, index) => (
-          <div 
-            key={`indicator-${project}`}
-            className={`h-full transition-all duration-300 ${
-              currentValue === project ? 'bg-primary' : 'bg-transparent'
-            }`}
-            style={{
-              width: `${100 / projectNames.length}%`,  
-              transform: `translateX(${projectNames.indexOf(currentValue || '') * 100}%)`,
-              position: 'relative'
-            }}
-          />
-        ))}
-      </div>
+      {/* Content area border to complete the Chrome-style tab look */}
+      <div className="w-full h-1 bg-border/40"></div>
     </div>
   );
 };

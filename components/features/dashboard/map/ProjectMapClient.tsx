@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import { Filter } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -27,7 +28,8 @@ const fixLeafletIcon = () => {
 };
 
 // Status icon creator
-const createStatusIcon = (status: string) => {
+const createStatusIcon = (isDocumented: boolean) => {
+  // Create custom icon with color based on documentation status only
   return new Icon({
     iconUrl: markerIcon.src,
     iconRetinaUrl: markerIcon2x.src,
@@ -35,7 +37,43 @@ const createStatusIcon = (status: string) => {
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
+    className: `marker-icon ${isDocumented ? 'documented' : 'undocumented'}`,
   });
+};
+
+// Map theme component to handle theme changes
+const MapTheme = () => {
+  const { theme } = useTheme();
+  const map = useMap();
+  
+  useEffect(() => {
+    // Apply theme-specific styles to the map
+    if (map) {
+      const mapContainer = map.getContainer();
+      if (theme === 'dark') {
+        mapContainer.classList.add('dark-map');
+      } else {
+        mapContainer.classList.remove('dark-map');
+      }
+    }
+  }, [map, theme]);
+  
+  // Use different tile layers based on theme
+  return (
+    <>
+      {theme === 'dark' ? (
+        <TileLayer
+          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        />
+      ) : (
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+      )}
+    </>
+  );
 };
 
 const ProjectMapClient = ({ className, projectLocations, milestones = [] }: ProjectMapProps) => {
@@ -49,6 +87,7 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
   const [showFilters, setShowFilters] = useState(false);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Record<number, any>>({});
+  const { theme } = useTheme();
   
   // Helper function to determine documentation status based on milestone ID
   const getMilestoneDocStatus = (milestoneId: number): boolean => {
@@ -199,30 +238,6 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
   // Default map center
   const defaultCenter: [number, number] = [-6.2088, 106.8456];
   
-  // Helper function to get status styling
-  const getStatusStyle = (status: string) => {
-    const styles = {
-      'Selesai': {
-        bg: 'hsl(var(--chart-2) / 0.1)',
-        color: 'hsl(var(--chart-2))'
-      },
-      'Pada Jadwal': {
-        bg: 'hsl(var(--chart-1) / 0.1)',
-        color: 'hsl(var(--chart-1))'
-      },
-      'Terlambat': {
-        bg: 'hsl(var(--destructive) / 0.1)',
-        color: 'hsl(var(--destructive))'
-      },
-      'default': {
-        bg: 'hsl(var(--muted-foreground) / 0.1)',
-        color: 'hsl(var(--muted-foreground))'
-      }
-    };
-    
-    return styles[status as keyof typeof styles] || styles.default;
-  };
-  
   // Reset map view function
   const resetMapView = () => {
     if (mapRef.current) {
@@ -286,7 +301,7 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
       {/* Compact filter button */}
       <div className="absolute top-3 right-3 z-[1000]">
         <button 
-          className="bg-white/90 backdrop-blur-sm rounded-md shadow-md p-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="bg-white/90 dark:bg-card backdrop-blur-sm rounded-md shadow-md p-2 hover:bg-primary hover:text-primary-foreground transition-colors"
           onClick={() => setShowFilters(!showFilters)}
         >
           <Filter className="h-4 w-4" />
@@ -295,7 +310,7 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
       
       {/* Compact filter panel */}
       {showFilters && (
-        <div className="absolute top-12 right-3 z-[1000] bg-white/90 backdrop-blur-sm rounded-md shadow-md p-3 w-48">
+        <div className="absolute top-12 right-3 z-[1000] bg-white/90 dark:bg-card backdrop-blur-sm rounded-md shadow-md p-3 w-48">
           <div className="space-y-3">
             {/* Area filter */}
             <div>
@@ -408,6 +423,40 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
           width: 100%;
           border-radius: 0.5rem;
         }
+        
+        /* Dark theme styles for map */
+        .dark .leaflet-container {
+          background-color: hsl(var(--background));
+        }
+        
+        .dark .leaflet-popup-content-wrapper,
+        .dark .leaflet-popup-tip {
+          background-color: hsl(var(--card));
+          color: hsl(var(--card-foreground));
+        }
+        
+        .dark .leaflet-control-zoom a {
+          background-color: hsl(var(--card));
+          color: hsl(var(--card-foreground));
+          border-color: hsl(var(--border));
+        }
+        
+        .dark .leaflet-control-zoom a:hover {
+          background-color: hsl(var(--accent));
+        }
+        
+        .dark .leaflet-bar {
+          border-color: hsl(var(--border));
+        }
+        
+        /* Custom marker styles */
+        .marker-icon.documented {
+          filter: hue-rotate(85deg) saturate(1.5);
+        }
+        
+        .marker-icon.undocumented {
+          filter: hue-rotate(0deg) saturate(1.5) brightness(1.2);
+        }
       `}</style>
       
       <MapContainer 
@@ -415,13 +464,10 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
         zoom={6} 
         style={{ height: '100%', width: '100%' }}
         attributionControl={false}
+        className={theme === 'dark' ? 'dark-map' : ''}
       >
         <MapController />
-        
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
+        <MapTheme />
         
         {/* Cable connections */}
         {filteredConnections.map(connection => {
@@ -455,8 +501,8 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
                     <span 
                       className={`ml-1 rounded-full px-2 py-0.5 text-xs font-medium ${
                         connection.isDocumented 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
                       }`}
                     >
                       {connection.isDocumented ? 'Terdokumentasi' : 'Belum Terdokumentasi'}
@@ -471,13 +517,12 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
         {/* Project markers */}
         {filteredProjects.map(project => {
           const projectArea = getProjectArea(project.id);
-          const statusStyle = getStatusStyle(project.status);
           
           return (
             <Marker 
               key={project.id}
               position={project.position}
-              icon={createStatusIcon(project.status)}
+              icon={createStatusIcon(project.isDocumented)}
               ref={(ref: any) => {
                 if (ref) {
                   markersRef.current[project.id] = ref;
@@ -498,20 +543,8 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
                   </p>
                   <div className="flex flex-col gap-1 mt-2">
                     <p className="text-xs">
-                      Status: 
-                      <span 
-                        className="ml-1 rounded-full px-2 py-0.5 text-xs font-medium"
-                        style={{ 
-                          backgroundColor: statusStyle.bg,
-                          color: statusStyle.color
-                        }}
-                      >
-                        {project.status}
-                      </span>
-                    </p>
-                    <p className="text-xs">
                       Jenis: 
-                      <span className="ml-1 rounded-full px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
+                      <span className="ml-1 rounded-full px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                         {project.category === 'backbone' ? 'Backbone' : 
                          project.category === 'distribution' ? 'Distribusi' : 
                          project.category === 'access' ? 'Akses' : 'Maintenance'}
@@ -522,8 +555,8 @@ const ProjectMapClient = ({ className, projectLocations, milestones = [] }: Proj
                       <span 
                         className={`ml-1 rounded-full px-2 py-0.5 text-xs font-medium ${
                           project.isDocumented 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
                         }`}
                       >
                         {project.isDocumented ? 'Sudah' : 'Belum'}

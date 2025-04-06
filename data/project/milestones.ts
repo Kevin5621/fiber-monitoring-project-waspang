@@ -10,7 +10,6 @@ export interface ProjectMilestone {
   projectId: number;
   deadline: string;
   startDate: string;
-  status: 'Belum Dimulai' | 'Pada Jadwal' | 'Terlambat' | 'Selesai';
   icon: React.ReactElement;
   requiredDocs: number;
   uploadedDocs: number;
@@ -29,7 +28,6 @@ export const getMilestones = (currentDate: Date): MilestoneProps['milestone'][] 
     project: milestone.project,
     deadline: milestone.deadline,
     startDate: milestone.startDate,
-    status: milestone.status,
     icon: milestone.icon,
     requiredDocs: milestone.requiredDocs,
     uploadedDocs: milestone.uploadedDocs,
@@ -47,7 +45,6 @@ export const milestones: ProjectMilestone[] = [
     projectId: 1,
     deadline: '25 Mar 2025',
     startDate: '20 Mar 2025',
-    status: 'Pada Jadwal',
     icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
     requiredDocs: 2,
     uploadedDocs: 2,
@@ -66,7 +63,6 @@ export const milestones: ProjectMilestone[] = [
     projectId: 2,
     deadline: '28 Mar 2025',
     startDate: '20 Mar 2025',
-    status: 'Terlambat',
     icon: React.createElement(AlertCircle, { className: "h-4 w-4" }),
     requiredDocs: 3,
     uploadedDocs: 1,
@@ -86,7 +82,6 @@ export const milestones: ProjectMilestone[] = [
     projectId: 3,
     deadline: '01 Apr 2025',
     startDate: '26 Mar 2025',
-    status: 'Pada Jadwal',
     icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
     requiredDocs: 2,
     uploadedDocs: 1,
@@ -105,7 +100,6 @@ export const milestones: ProjectMilestone[] = [
     projectId: 2,
     deadline: '25 Mar 2025',
     startDate: '22 Mar 2025',
-    status: 'Selesai',
     icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
     requiredDocs: 2,
     uploadedDocs: 2,
@@ -124,7 +118,6 @@ export const milestones: ProjectMilestone[] = [
     projectId: 1,
     deadline: '02 Apr 2025',
     startDate: '30 Mar 2025',
-    status: 'Belum Dimulai',
     icon: React.createElement(Clock, { className: "h-4 w-4" }),
     requiredDocs: 3,
     uploadedDocs: 0,
