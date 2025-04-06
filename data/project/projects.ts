@@ -7,7 +7,7 @@ export interface Project {
   location: string;
   startDate: string;
   endDate: string;
-  status: 'not-started' | 'in-progress' | 'completed';
+  status: 'in-progress' | 'completed';
   progress: number;
   milestones: number;
   completedMilestones: number;
@@ -104,13 +104,11 @@ export const calculateProjectStats = () => {
   const totalProjects = projects.length;
   const completedProjects = projects.filter(p => p.status === 'completed').length;
   const inProgressProjects = projects.filter(p => p.status === 'in-progress').length;
-  const notStartedProjects = projects.filter(p => p.status === 'not-started').length;
   
   return {
     totalProjects,
     completedProjects,
     inProgressProjects,
-    notStartedProjects,
     completionRate: Math.round((completedProjects / totalProjects) * 100)
   };
 };

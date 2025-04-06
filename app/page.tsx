@@ -1,6 +1,6 @@
 "use client";
 
-import { Message } from "@/components/common/from/form-message";
+import { Message } from "@/components/common/form/form-message";
 import { useEffect, useState } from "react";
 import { LoginVisual } from "@/components/features/auth/login-visual";
 import { LoginForm } from "@/components/features/auth/login-form";
