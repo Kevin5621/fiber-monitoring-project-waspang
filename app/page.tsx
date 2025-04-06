@@ -1,9 +1,9 @@
 "use client";
 
-import { Message } from "@/components/form-message";
+import { Message } from "@/components/common/from/form-message";
 import { useEffect, useState } from "react";
-import { LoginVisual } from "@/components/login-visual";
-import { LoginForm } from "@/components/login-form";
+import { LoginVisual } from "@/components/features/auth/login-visual";
+import { LoginForm } from "@/components/features/auth/login-form";
 
 export default function Login(props: { searchParams: Promise<Message> }) {
   const [message, setMessage] = useState<Message | null>(null);

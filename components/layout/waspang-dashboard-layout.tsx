@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import Header from '@/components/ui/header';
-import Sidebar from '@/components/ui/sidebardashboard';
+import Header from '@/components/layout/header';
+import Sidebar from '@/components/layout/sidebar';
 import { useState, createContext } from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, FolderIcon, CalendarIcon, Archive, Settings } from 'lucide-react';

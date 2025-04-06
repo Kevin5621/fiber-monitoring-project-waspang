@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Menu, X, Bell, User } from 'lucide-react';
-import { ThemeSwitcher } from "../theme-switcher";
+import { ThemeSwitcher } from "../common/theme-switcher";
 import { useState } from "react";
 import { signOutAction } from "@/app/actions";
-import { Button } from "./button";
+import { Button } from "../ui/button";
 
 export default function Header({ 
   toggleSidebar,

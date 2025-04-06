@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { signInAction } from "@/app/actions";
-import { FormMessage, Message } from "@/components/form-message";
-import { SubmitButton } from "@/components/submit-button";
+import { FormMessage, Message } from "@/components/common/from/form-message";
+import { SubmitButton } from "@/components/common/from/submit-button";
 import { Input } from "@/components/ui/input";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import { ThemeSwitcher } from "@/components/common/theme-switcher";
 
 interface LoginFormProps {
   message: Message | null;

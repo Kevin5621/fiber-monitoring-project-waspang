@@ -2,7 +2,7 @@ import React from 'react';
 import { FileText, Upload, Plus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { DocumentProps } from './types';
+import { DocumentProps } from '../types';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 

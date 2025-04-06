@@ -1,7 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import { ProjectMapProps } from '@/components/dashboard/types';
+import { ProjectMapProps } from '@/components/features/dashboard/types';
 
 // Create a loading component
 const MapLoading = () => (

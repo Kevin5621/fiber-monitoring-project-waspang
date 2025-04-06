@@ -1,4 +1,4 @@
-import { DocumentProps } from '@/components/dashboard/types';
+import { DocumentProps } from '@/components/features/dashboard/types';
 
 // Define a more comprehensive document type that includes all needed fields
 export interface ProjectDocument {

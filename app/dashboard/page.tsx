@@ -8,16 +8,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { MilestoneChart } from '@/components/dashboard/milestone/MilestoneChart';
-import { DocumentCard } from '@/components/dashboard/DocumentCard';
-import { StatCard, StatProps } from '@/components/dashboard/StatCard';
+import { MilestoneChart } from '@/components/features/dashboard/milestone/MilestoneChart';
+import { DocumentCard } from '@/components/features/dashboard/common/DocumentCard';
+import { StatCard, StatProps } from '@/components/features/dashboard/common/StatCard';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
 import { mockData, ProjectLocation } from '@/data/dashboardData';
-import { MilestoneProps, DocumentProps,  } from '@/components/dashboard/types';
-import ProjectMap from '@/components/dashboard/map/ProjectMap';
-import LocationFilters from '@/components/dashboard/map/LocationFilters';
-import MapLegend from '@/components/dashboard/map/MapLegend';
-import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton';
+import { MilestoneProps, DocumentProps,  } from '@/components/features/dashboard/types';
+import ProjectMap from '@/components/features/dashboard/map/ProjectMap';
+import LocationFilters from '@/components/features/dashboard/map/LocationFilters';
+import MapLegend from '@/components/features/dashboard/map/MapLegend';
+import { DashboardSkeleton } from '@/components/features/dashboard/DashboardSkeleton';
 
 // Define the dashboard data type
 interface DashboardData {

@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { PriorityTaskProps } from './types';
+import { PriorityTaskProps } from '../types';
 
 export const PriorityTaskCard = ({ task }: PriorityTaskProps) => {  return (
     <Card className="transition-all duration-200 hover:shadow-md">

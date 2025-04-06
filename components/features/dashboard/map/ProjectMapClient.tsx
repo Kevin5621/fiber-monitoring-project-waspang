@@ -14,7 +14,7 @@ import {
   CableConnection, 
   FilterOptions, 
   ProjectMapProps 
-} from '@/components/dashboard/types';
+} from '@/components/features/dashboard/types';
 
 // Fix for Leaflet icon in Next.js
 const fixLeafletIcon = () => {
