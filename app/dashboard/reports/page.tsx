@@ -30,15 +30,14 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { dailyReports } from '@/data/project/reports';
 import { projects } from '@/data/project/projects';
+import { usePagination } from '@/hooks/usePagination';
+import { PaginationControl } from '@/components/features/common/pagination-control';
 
 const ReportsPage = () => {
   const [filterProject, setFilterProject] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterDate, setFilterDate] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
   
   // Use centralized data from reports.ts
   const reports = dailyReports;
@@ -66,10 +65,15 @@ const ReportsPage = () => {
       );
     });
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedReports = filteredReports.slice(startIndex, startIndex + itemsPerPage);
+  // Use the pagination hook
+  const pagination = usePagination({
+    totalItems: filteredReports.length,
+    initialItemsPerPage: 5,
+    initialPage: 1
+  });
+  
+  // Get paginated reports
+  const paginatedReports = pagination.paginatedItems(filteredReports);
 
   // Menghitung laporan berdasarkan status
   const approvedCount = reports.filter(r => r.status === 'approved').length;
@@ -308,75 +312,19 @@ const ReportsPage = () => {
                             </div>
                           ))}
                           
-                          {/* Pagination Controls */}
-                          <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-border gap-4">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm text-muted-foreground">
-                                Menampilkan {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredReports.length)} dari {filteredReports.length} laporan
-                              </span>
-                              <Select
-                                value={itemsPerPage.toString()}
-                                onValueChange={(value) => {
-                                  setItemsPerPage(Number(value));
-                                  setCurrentPage(1);
-                                }}
-                              >
-                                <SelectTrigger className="w-[120px] h-8">
-                                  <SelectValue placeholder="Tampilkan" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="5">5 per halaman</SelectItem>
-                                  <SelectItem value="10">10 per halaman</SelectItem>
-                                  <SelectItem value="20">20 per halaman</SelectItem>
-                                  <SelectItem value="50">50 per halaman</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            
-                            <div className="flex items-center gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => setCurrentPage(1)}
-                                disabled={currentPage === 1}
-                              >
-                                Pertama
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                size="icon"
-                                className="h-8 w-8" 
-                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                disabled={currentPage === 1}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                              </Button>
-                              
-                              <div className="flex items-center">
-                                <span className="text-sm font-medium mx-2">
-                                  {currentPage} dari {totalPages}
-                                </span>
-                              </div>
-                              
-                              <Button 
-                                variant="outline" 
-                                size="icon"
-                                className="h-8 w-8" 
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => setCurrentPage(totalPages)}
-                                disabled={currentPage === totalPages}
-                              >
-                                Terakhir
-                              </Button>
-                            </div>
-                          </div>
+                          <PaginationControl
+                            currentPage={pagination.currentPage}
+                            totalPages={pagination.totalPages}
+                            itemsPerPage={pagination.itemsPerPage}
+                            totalItems={filteredReports.length}
+                            startIndex={pagination.startIndex}
+                            endIndex={pagination.endIndex}
+                            canGoBack={pagination.canGoBack}
+                            canGoForward={pagination.canGoForward}
+                            onPageChange={pagination.setCurrentPage}
+                            onItemsPerPageChange={pagination.setItemsPerPage}
+                            itemsPerPageOptions={[5, 10, 20, 50]}
+                          />
                         </>
                       ) : (
                         <div className="text-center py-12 bg-muted/20 rounded-lg">

@@ -8,6 +8,7 @@ import { getMilestonesByProjectId } from '@/data/project/milestones';
 import { getDocumentsByProjectId } from '@/data/project/projects';
 import { ProjectFilter } from '@/components/features/project/project-filter';
 import { ProjectGrid } from '@/components/features/project/project-grid';
+import { PaginationControl } from '@/components/features/common/pagination-control';
 
 const ProjectsPage = () => {
   const [filterStatus, setFilterStatus] = useState('all');
@@ -18,6 +19,10 @@ const ProjectsPage = () => {
     totalDocuments: number;
     documentedDocuments: number;
   }}>({});
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   
   // Load project stats on component mount
   useEffect(() => {
@@ -56,6 +61,23 @@ const ProjectsPage = () => {
       );
     });
 
+  // Pagination calculations
+  const totalItems = filteredProjects.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage - 1, totalItems - 1);
+  const paginatedProjects = filteredProjects.slice(startIndex, startIndex + itemsPerPage);
+  
+  // Pagination handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); 
+  };
+
   return (
     <div className="container mx-auto p-4 sm:p-6 relative">
       <div className="space-y-6">
@@ -69,9 +91,26 @@ const ProjectsPage = () => {
 
         {/* Projects Grid */}
         <ProjectGrid 
-          projects={filteredProjects} 
+          projects={paginatedProjects} 
           projectStats={projectStats} 
         />
+        
+        {/* Pagination Control */}
+        {totalItems > 0 && (
+          <PaginationControl
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            totalItems={totalItems}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            canGoBack={currentPage > 1}
+            canGoForward={currentPage < totalPages}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            itemsPerPageOptions={[6, 12, 24, 48]}
+          />
+        )}
       </div>
 
       {/* Floating Action Button */}
