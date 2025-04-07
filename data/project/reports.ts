@@ -200,3 +200,31 @@ export const calculateReportStats = () => {
     approvalRate: Math.round((approvedReports / totalReports) * 100)
   };
 };
+
+// Add this interface at the top with other interfaces
+export interface DailyReportCheck {
+  projectId: number;
+  projectName: string;
+  hasSubmittedReport: boolean;
+}
+
+import { projects } from './projects';
+import { formatDate } from '@/lib/utils';
+
+export const checkMissingDailyReports = (date: Date = new Date()): DailyReportCheck[] => {
+  const activeProjects = projects.filter(p => !p.isCompleted);
+  const dateStr = formatDate(date);
+  
+  return activeProjects.map(project => {
+    const hasReport = dailyReports.some(report => 
+      report.projectId === project.id && 
+      formatDate(report.submittedAt) === dateStr
+    );
+    
+    return {
+      projectId: project.id,
+      projectName: project.name,
+      hasSubmittedReport: hasReport
+    };
+  });
+};

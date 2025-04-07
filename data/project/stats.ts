@@ -57,6 +57,25 @@ export const calculateStats = (
     (report.status === 'approved' || report.status === 'in-review')
   );
 
+  // Get active projects
+  const activeProjects = projects.filter(p => !p.isCompleted);
+  
+  // Check daily reports status for each active project
+  const projectReportsStatus = activeProjects.map(project => {
+    const today = currentDate || new Date();
+    const todayFormatted = formatDate(today);
+    
+    return dailyReports.some(report => 
+      report.projectId === project.id &&
+      formatDate(report.submittedAt) === todayFormatted &&
+      (report.status === 'approved' || report.status === 'in-review')
+    );
+  });
+
+  // Calculate overall daily reports status
+  const submittedReports = projectReportsStatus.filter(status => status).length;
+  const totalRequired = activeProjects.length;
+  
   // Stats for the dashboard
   const stats: StatProps[] = [
     {
@@ -68,10 +87,10 @@ export const calculateStats = (
     },
     {
       title: 'Laporan Harian',
-      value: todayReportSubmitted || reportSubmittedToday ? 'Terkirim' : 'Belum Dibuat',
-      description: 'Status laporan hari ini',
+      value: `${submittedReports}/${totalRequired}`,
+      description: `${totalRequired - submittedReports} laporan belum dibuat`,
       icon: React.createElement(ClipboardList, { className: "h-5 w-5" }),
-      color: (todayReportSubmitted || reportSubmittedToday) ? 'success' : 'warning'
+      color: submittedReports === totalRequired ? 'success' : 'warning'
     },
     {
       title: 'Dokumentasi',
@@ -92,9 +111,9 @@ export const calculateStats = (
     },
     {
       title: 'Laporan',
-      value: (todayReportSubmitted || reportSubmittedToday) ? '✓' : '✗',
+      value: `${submittedReports}/${totalRequired}`,
       icon: React.createElement(ClipboardList, { className: "h-4 w-4" }),
-      color: (todayReportSubmitted || reportSubmittedToday) ? 'success' : 'warning'
+      color: submittedReports === totalRequired ? 'success' : 'warning'
     },
     {
       title: 'Dokumen',

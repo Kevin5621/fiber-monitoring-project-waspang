@@ -149,7 +149,7 @@ export const MilestoneChart: React.FC<MilestoneChartProps> = ({ milestones }) =>
                       <ChevronRight className="h-5 w-5 text-primary" />
                     }
                   </div>
-                  <h3 className="font-semibold text-base sm:text-lg text-foreground">{project}</h3>
+                  <h3 className="font-semibold text-base sm:text-lg text-foreground truncate max-w-[150px] sm:max-w-[250px]">{project}</h3>
                 </div>
                 
                 <div className="flex items-center space-x-4">
