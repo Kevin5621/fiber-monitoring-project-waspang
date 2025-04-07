@@ -11,17 +11,21 @@ export interface MilestoneProps {
     description?: string;
     // Document tracking properties
     documents?: DocumentProps['doc'][];
+    requiredPhotos?: {
+      name: string;
+      uploaded: boolean;
+    }[];
   };
 }
 
 // Document Types
+// Add or update this interface in your types file
 export interface DocumentProps {
   doc?: {
     name: string;
     project: string;
+    milestoneId?: string;
   };
-  isAddCard?: boolean;
-  onAddDocument?: (name: string, milestoneId: string) => void;
 }
 
 // Map Types

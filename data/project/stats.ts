@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart3, ClipboardList, FileCheck } from 'lucide-react';
-import { StatProps } from '@/components/features/dashboard/common/StatCard';
+import { StatProps } from '@/components/features/dashboard/common/stat-card';
 import { documents } from './documents';
 import { milestones } from './milestones';
 import { activities } from './activities';
