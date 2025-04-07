@@ -5,6 +5,8 @@ import { documents } from './documents';
 import { milestones } from './milestones';
 import { activities } from './activities';
 import { dailyReports } from './reports';
+import { projects, getProjectById } from './projects';
+import { formatDate } from '@/lib/utils';
 
 // Function to calculate stats using our centralized data
 export const calculateStats = (
@@ -13,18 +15,31 @@ export const calculateStats = (
   // Calculate stats based on the centralized data
   const totalMilestones = milestones.length;
   
-  // Update the completion criteria to only check uploaded documents
-  const completedMilestones = milestones.filter(m => 
-    m.uploadedDocs >= m.requiredDocs
-  ).length;
+  // Update the completion criteria to check required photos instead of uploadedDocs/requiredDocs
+  const completedMilestones = milestones.filter(m => {
+    // A milestone is complete if all required photos are uploaded
+    return m.requiredPhotos && 
+           m.requiredPhotos.every(photo => photo.uploaded === true);
+  }).length;
   
-  const inProgressMilestones = milestones.filter(m => 
-    m.uploadedDocs > 0 && m.uploadedDocs < m.requiredDocs
-  ).length;
+  const inProgressMilestones = milestones.filter(m => {
+    // A milestone is in progress if some but not all required photos are uploaded
+    return m.requiredPhotos && 
+           m.requiredPhotos.some(photo => photo.uploaded === true) &&
+           !m.requiredPhotos.every(photo => photo.uploaded === true);
+  }).length;
   
   const pendingDocuments = documents.length;
-  const documentsUploaded = milestones.reduce((total, milestone) => total + milestone.uploadedDocs, 0);
-  const totalRequiredDocs = milestones.reduce((total, milestone) => total + milestone.requiredDocs, 0);
+  
+  // Calculate total uploaded photos and required photos
+  const documentsUploaded = milestones.reduce((total, milestone) => {
+    return total + (milestone.requiredPhotos ? 
+      milestone.requiredPhotos.filter(photo => photo.uploaded).length : 0);
+  }, 0);
+  
+  const totalRequiredDocs = milestones.reduce((total, milestone) => {
+    return total + (milestone.requiredPhotos ? milestone.requiredPhotos.length : 0);
+  }, 0);
 
   // Check if daily report has been submitted today
   const todayReportSubmitted = activities.some(activity => 
@@ -33,15 +48,12 @@ export const calculateStats = (
   );
 
   // Alternative check using the reports data
+  // Update the date comparison logic
   const today = currentDate || new Date();
-  const todayFormatted = today.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  });
+  const todayFormatted = formatDate(today);
   
   const reportSubmittedToday = dailyReports.some(report => 
-    report.date === todayFormatted && 
+    formatDate(report.submittedAt) === todayFormatted && 
     (report.status === 'approved' || report.status === 'in-review')
   );
 
@@ -97,16 +109,32 @@ export const calculateStats = (
 
 // Helper function to get project-specific stats
 export const getProjectStats = (projectId: number) => {
+  // Get project data
+  const project = getProjectById(projectId);
+  
   // Filter milestones by project
   const projectMilestones = milestones.filter(m => m.projectId === projectId);
   const totalMilestones = projectMilestones.length;
-  const completedMilestones = projectMilestones.filter(m => 
-    m.uploadedDocs >= m.requiredDocs
-  ).length;
+  
+  // Calculate completed milestones based on requiredPhotos
+  const completedMilestones = projectMilestones.filter(m => {
+    return m.requiredPhotos && 
+           m.requiredPhotos.every(photo => photo.uploaded === true);
+  }).length;
   
   // Filter documents by project
   const projectDocuments = documents.filter(d => d.projectId === projectId);
   const totalDocuments = projectDocuments.length;
+  
+  // Calculate required and uploaded photos
+  const requiredPhotos = projectMilestones.reduce((total, milestone) => {
+    return total + (milestone.requiredPhotos ? milestone.requiredPhotos.length : 0);
+  }, 0);
+  
+  const uploadedPhotos = projectMilestones.reduce((total, milestone) => {
+    return total + (milestone.requiredPhotos ? 
+      milestone.requiredPhotos.filter(photo => photo.uploaded).length : 0);
+  }, 0);
   
   // Filter reports by project
   const projectReports = dailyReports.filter(r => r.projectId === projectId);
@@ -120,9 +148,9 @@ export const getProjectStats = (projectId: number) => {
       progress: totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0
     },
     documents: {
-      total: totalDocuments,
-      uploaded: projectDocuments.length, // Assuming all documents in the array are uploaded
-      pending: 0 // This would need to be calculated based on required docs
+      total: requiredPhotos,
+      uploaded: uploadedPhotos,
+      pending: requiredPhotos - uploadedPhotos
     },
     reports: {
       total: totalReports,

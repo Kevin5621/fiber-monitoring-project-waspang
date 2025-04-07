@@ -1,15 +1,18 @@
 import React from 'react';
 import { ProjectCard } from './project-card';
 import { EmptyProjectState } from './empty-project-state';
+import { Project } from '@/data/project/projects';
+
+interface ProjectStats {
+  totalMilestones: number;
+  completedMilestones: number;
+  totalDocuments: number;
+  documentedDocuments: number;
+}
 
 interface ProjectGridProps {
-  projects: any[];
-  projectStats: {[key: number]: {
-    totalMilestones: number;
-    completedMilestones: number;
-    totalDocuments: number;
-    documentedDocuments: number;
-  }};
+  projects: Project[];
+  projectStats: {[key: number]: ProjectStats};
 }
 
 export const ProjectGrid = ({ projects, projectStats }: ProjectGridProps) => {

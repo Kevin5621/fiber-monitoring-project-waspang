@@ -4,17 +4,10 @@ import { Calendar, MapPin, CheckCircle, FileCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Project } from '@/data/project/projects';
 
 interface ProjectCardProps {
-  project: {
-    id: number;
-    name: string;
-    location: string;
-    startDate: string;
-    endDate: string;
-    status: string;
-    progress: number;
-  };
+  project: Project;
   stats: {
     totalMilestones: number;
     completedMilestones: number;
@@ -24,13 +17,22 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, stats }: ProjectCardProps) => {
-  const getStatusBadge = (status: string) => {
-    if (status === 'completed' || status === 'Selesai') {
+  const getStatusBadge = (isCompleted: boolean) => {
+    if (isCompleted) {
       return <Badge className="bg-success-100 text-success border-0 font-medium px-2.5 py-0.5 rounded">Selesai</Badge>;
     } else {
       return <Badge className="bg-info-100 text-info border-0 font-medium px-2.5 py-0.5 rounded">Sedang Berjalan</Badge>;
     }
   };
+
+  // Format dates for display
+  const startDateFormatted = project.startDate instanceof Date 
+    ? project.startDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+    : project.startDate;
+    
+  const endDateFormatted = project.endDate instanceof Date
+    ? project.endDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+    : project.endDate;
 
   return (
     <Link href={`/dashboard/project/${project.id}`}>
@@ -38,7 +40,7 @@ export const ProjectCard = ({ project, stats }: ProjectCardProps) => {
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <h3 className="text-lg font-semibold line-clamp-2">{project.name}</h3>
-            {getStatusBadge(project.status)}
+            {getStatusBadge(project.isCompleted)}
           </div>
           
           <div className="flex items-center text-sm text-muted-foreground mb-3">
@@ -48,7 +50,7 @@ export const ProjectCard = ({ project, stats }: ProjectCardProps) => {
           
           <div className="flex items-center text-sm text-muted-foreground mb-5">
             <Calendar className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
-            <span>{project.startDate} - {project.endDate}</span>
+            <span>{startDateFormatted} - {endDateFormatted}</span>
           </div>
           
           <div className="mb-5">

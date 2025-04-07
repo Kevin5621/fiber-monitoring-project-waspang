@@ -3,9 +3,8 @@ export interface DailyReport {
   title: string;
   project: string;
   projectId: number;
-  date: string;
   submittedBy: string;
-  submittedAt: string;
+  submittedAt: Date;
   status: 'draft' | 'in-review' | 'approved' | 'rejected';
   progress: number;
   activities: string[];
@@ -27,9 +26,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Penggalian Jalur Kabel',
     project: 'Fiber Optik Jl. Sudirman',
     projectId: 1,
-    date: '15 Mar 2025',
     submittedBy: 'Ahmad Rizal',
-    submittedAt: '19:30',
+    submittedAt: new Date('2025-03-15T19:30:00'),
     status: 'approved',
     progress: 100,
     activities: [
@@ -48,9 +46,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Penarikan Kabel',
     project: 'Fiber Optik Jl. Sudirman',
     projectId: 1,
-    date: '16 Mar 2025',
     submittedBy: 'Ahmad Rizal',
-    submittedAt: '18:45',
+    submittedAt: new Date('2025-03-16T18:45:00'),
     status: 'approved',
     progress: 100,
     activities: [
@@ -68,9 +65,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Terminasi Kabel',
     project: 'Fiber Optik Jl. Sudirman',
     projectId: 1,
-    date: '17 Mar 2025',
     submittedBy: 'Rudi Hartono',
-    submittedAt: '20:10',
+    submittedAt: new Date('2025-03-16T18:20:10'),
     status: 'in-review',
     progress: 80,
     activities: [
@@ -88,9 +84,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Penggalian',
     project: 'Fiber Optik Tebet',
     projectId: 2,
-    date: '14 Mar 2025',
     submittedBy: 'Dewi Putri',
-    submittedAt: '19:15',
+    submittedAt: new Date('2025-03-16T18:19:15'),
     status: 'approved',
     progress: 100,
     activities: [
@@ -107,9 +102,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Instalasi ODP',
     project: 'Fiber Optik Tebet',
     projectId: 2,
-    date: '16 Mar 2025',
     submittedBy: 'Bambang Kusumo',
-    submittedAt: '17:30',
+    submittedAt: new Date('2025-03-16T18:17:30'),
     status: 'in-review',
     progress: 85,
     activities: [
@@ -126,9 +120,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Survey Lokasi',
     project: 'Fiber Optik Kemang',
     projectId: 3,
-    date: '03 Mar 2025',
     submittedBy: 'Ahmad Rizal',
-    submittedAt: '16:45',
+    submittedAt: new Date('2025-03-16T18:16:45'),
     status: 'approved',
     progress: 100,
     activities: [
@@ -146,9 +139,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Perapihan Kabel',
     project: 'Fiber Optik Kemang',
     projectId: 3,
-    date: '19 Mar 2025',
     submittedBy: 'Siti Nuraini',
-    submittedAt: '18:00',
+    submittedAt: new Date('2025-03-16T18:18:00'),
     status: 'rejected',
     progress: 30,
     activities: [
@@ -166,9 +158,8 @@ export const dailyReports: DailyReport[] = [
     title: 'Laporan Harian - Testing',
     project: 'Fiber Optik Kemang',
     projectId: 3,
-    date: '22 Mar 2025',
     submittedBy: 'Bambang Kusumo',
-    submittedAt: '19:45',
+    submittedAt: new Date('2025-03-16T18:19:45'),
     status: 'draft',
     progress: 20,
     activities: [

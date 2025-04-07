@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { dailyReports } from '@/data/project/reports';
 import { projects } from '@/data/project/projects';
+import { formatDate, formatTime } from "@/lib/utils";
 
 export default function DailyReportDetailPage() {
   const params = useParams();
@@ -93,10 +94,10 @@ export default function DailyReportDetailPage() {
               <h2 className="text-lg font-medium text-foreground">{report.title}</h2>
               <div className="flex items-center mt-1 text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4 mr-1" />
-                <span>{report.date}</span>
+                <span>{formatDate(report.date)}</span>
                 <span className="mx-2">•</span>
                 <Clock className="h-4 w-4 mr-1" />
-                <span>Disubmit: {report.submittedAt}</span>
+                <span>Disubmit: {formatTime(report.submittedAt)}</span>
               </div>
             </div>
             <div className="flex space-x-2">

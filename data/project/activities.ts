@@ -13,7 +13,8 @@ export const getActivities = (): ActivityProps['activity'][] => {
   return activities.map(activity => ({
     action: activity.action,
     time: activity.time,
-    project: activity.project
+    project: activity.project,
+    user: activity.user
   }));
 };
 

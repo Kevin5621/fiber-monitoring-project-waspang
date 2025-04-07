@@ -5,9 +5,9 @@ export interface Project {
   id: number;
   name: string;
   location: string;
-  startDate: string;
-  endDate: string;
-  status: 'in-progress' | 'completed';
+  startDate: Date; 
+  endDate: Date; 
+  isCompleted: boolean;
   progress: number;
   milestones: number;
   completedMilestones: number;
@@ -21,9 +21,9 @@ export const projects: Project[] = [
     id: 1,
     name: 'Fiber Optik Jl. Sudirman',
     location: 'Jl. Jendral Sudirman, Jakarta Pusat',
-    startDate: '10 Mar 2025',
-    endDate: '15 Apr 2025',
-    status: 'in-progress',
+    startDate: new Date('2025-03-10'),
+    endDate: new Date('2025-04-15'),
+    isCompleted: false, 
     progress: 68,
     milestones: 5,
     completedMilestones: 3,
@@ -34,9 +34,9 @@ export const projects: Project[] = [
     id: 2,
     name: 'Fiber Optik Tebet',
     location: 'Jl. Tebet Raya, Jakarta Selatan',
-    startDate: '15 Mar 2025',
-    endDate: '20 Apr 2025',
-    status: 'in-progress',
+    startDate: new Date('2025-03-15'),
+    endDate: new Date('2025-04-20'),
+    isCompleted: false, 
     progress: 45,
     milestones: 4,
     completedMilestones: 1,
@@ -47,9 +47,9 @@ export const projects: Project[] = [
     id: 3,
     name: 'Fiber Optik Kemang',
     location: 'Jl. Kemang Raya, Jakarta Selatan',
-    startDate: '5 Mar 2025',
-    endDate: '10 Apr 2025',
-    status: 'in-progress',
+    startDate: new Date('5 Mar 2025'),
+    endDate: new Date('10 Apr 2025'),
+    isCompleted: false,
     progress: 20,
     milestones: 6,
     completedMilestones: 1,
@@ -60,9 +60,9 @@ export const projects: Project[] = [
     id: 4,
     name: 'Instalasi Fiber BSD',
     location: 'BSD City, Tangerang Selatan',
-    startDate: '1 Feb 2025',
-    endDate: '25 Feb 2025',
-    status: 'completed',
+    startDate: new Date('1 Feb 2025'),
+    endDate: new Date('25 Feb 2025'),
+    isCompleted: true,
     progress: 100,
     milestones: 4,
     completedMilestones: 4,
@@ -73,9 +73,9 @@ export const projects: Project[] = [
     id: 5,
     name: 'Jaringan Fiber Menteng',
     location: 'Menteng, Jakarta Pusat',
-    startDate: '20 Feb 2025',
-    endDate: '15 Mar 2025',
-    status: 'completed',
+    startDate: new Date('20 Feb 2025'),
+    endDate: new Date('15 Mar 2025'),
+    isCompleted: true,
     progress: 100,
     milestones: 5,
     completedMilestones: 5,
@@ -102,8 +102,8 @@ export const getProjectLocations = () => {
 // Helper function to calculate project statistics
 export const calculateProjectStats = () => {
   const totalProjects = projects.length;
-  const completedProjects = projects.filter(p => p.status === 'completed').length;
-  const inProgressProjects = projects.filter(p => p.status === 'in-progress').length;
+  const completedProjects = projects.filter(p => p.isCompleted).length;
+  const inProgressProjects = projects.filter(p => !p.isCompleted).length;
   
   return {
     totalProjects,

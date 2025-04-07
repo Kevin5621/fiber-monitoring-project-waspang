@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { MilestoneChart } from '@/components/features/dashboard/milestone/MilestoneChart';
 import { DocumentCard } from '@/components/features/dashboard/common/DocumentCard';
 import { StatCard, StatProps } from '@/components/features/dashboard/common/StatCard';
+import { MilestoneChart } from '@/components/features/dashboard/common/MilestoneChart';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
 import { mockData, ProjectLocation } from '@/data/dashboardData';
 import { MilestoneProps, DocumentProps,  } from '@/components/features/dashboard/types';
@@ -80,7 +80,6 @@ const DashboardPage = () => {
     const newDocument = {
       name,
       project: milestone.project,
-      deadline: milestone.deadline
     };
     
     // Update the dashboard data with the new document

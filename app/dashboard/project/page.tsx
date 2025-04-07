@@ -32,9 +32,11 @@ const ProjectsPage = () => {
       const milestones = getMilestonesByProjectId(project.id);
       const documents = getDocumentsByProjectId(project.id);
       
-      const completedMilestones = milestones.filter(m => 
-        m.status === 'Selesai' || m.uploadedDocs >= m.requiredDocs
-      ).length;
+      const completedMilestones = milestones.filter(m => {
+        // Check if milestone is complete based on requiredPhotos
+        return m.requiredPhotos && 
+               m.requiredPhotos.every(photo => photo.uploaded === true);
+      }).length;
       
       const documentedDocuments = documents.filter(doc => doc.type === 'document').length;
       
@@ -51,7 +53,10 @@ const ProjectsPage = () => {
   
   // Filter projects based on status and search query
   const filteredProjects = projects
-    .filter(project => filterStatus === 'all' || project.status === filterStatus)
+    .filter(project => {
+      if (filterStatus === 'all') return true;
+      return filterStatus === 'completed' ? project.isCompleted : !project.isCompleted;
+    })
     .filter(project => {
       if (!searchQuery) return true;
       const query = searchQuery.toLowerCase();

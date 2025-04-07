@@ -30,6 +30,7 @@ import Link from 'next/link';
 import { documents } from '@/data/project/documents';
 import { projects } from '@/data/project/projects';
 import { PaginationControl } from '@/components/features/common/pagination-control';
+import { formatDate } from '@/lib/utils';
 
 const DocumentationPage = () => {
   const [filterProject, setFilterProject] = useState('all');
@@ -176,7 +177,7 @@ const DocumentationPage = () => {
                       {getFileIcon(doc.fileType, doc.type)}
                       <div className="ml-2">
                         <p className="text-sm font-medium line-clamp-1">{doc.name}</p>
-                        <p className="text-xs text-muted-foreground">{doc.uploadDate}</p>
+                        <p className="text-xs text-muted-foreground">{formatDate(doc.uploadDate)}</p>
                       </div>
                     </div>
                   ))}
@@ -293,7 +294,7 @@ const DocumentationPage = () => {
                           <div className="flex flex-wrap items-center text-xs text-muted-foreground gap-x-4 gap-y-1">
                             <span>Tipe: {doc.fileType}</span>
                             <span>Ukuran: {doc.size}</span>
-                            <span>Diunggah: {doc.uploadDate}</span>
+                            <span>Diunggah: {formatDate(doc.uploadDate)}</span>
                             <span>Oleh: {doc.uploadedBy}</span>
                           </div>
                         </div>
@@ -402,7 +403,7 @@ const DocumentationPage = () => {
                           <div className="flex flex-wrap items-center text-xs text-muted-foreground gap-x-4 gap-y-1">
                             <span>Tipe: {doc.fileType}</span>
                             <span>Ukuran: {doc.size}</span>
-                            <span>Diunggah: {doc.uploadDate}</span>
+                            <span>Diunggah: {formatDate(doc.uploadDate)}</span>
                             <span>Oleh: {doc.uploadedBy}</span>
                           </div>
                         </div>
@@ -492,7 +493,7 @@ const DocumentationPage = () => {
                           <h3 className="text-sm font-medium line-clamp-1">{doc.name}</h3>
                           <p className="text-xs text-muted-foreground mt-1 mb-2">{doc.project}</p>
                           <div className="flex justify-between items-center">
-                            <span className="text-xs text-muted-foreground">{doc.uploadDate}</span>
+                            <span className="text-xs text-muted-foreground">{formatDate(doc.uploadDate)}</span>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="h-7 w-7">
@@ -564,7 +565,7 @@ const DocumentationPage = () => {
                               {getFileIcon(doc.fileType, doc.type)}
                               <div className="ml-2 overflow-hidden">
                                 <p className="text-sm font-medium truncate">{doc.name}</p>
-                                <p className="text-xs text-muted-foreground">{doc.uploadDate}</p>
+                                <p className="text-xs text-muted-foreground">{formatDate(doc.uploadDate)}</p>
                               </div>
                             </div>
                           ))}

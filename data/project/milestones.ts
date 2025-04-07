@@ -8,11 +8,7 @@ export interface ProjectMilestone {
   name: string;
   project: string;
   projectId: number;
-  deadline: string;
-  startDate: string;
   icon: React.ReactElement;
-  requiredDocs: number;
-  uploadedDocs: number;
   documents: any[];
   progress?: number;
   requiredPhotos: {
@@ -26,11 +22,7 @@ export const getMilestones = (currentDate: Date): MilestoneProps['milestone'][] 
     id: milestone.id,
     name: milestone.name,
     project: milestone.project,
-    deadline: milestone.deadline,
-    startDate: milestone.startDate,
     icon: milestone.icon,
-    requiredDocs: milestone.requiredDocs,
-    uploadedDocs: milestone.uploadedDocs,
     documents: milestone.documents,
     requiredPhotos: milestone.requiredPhotos
   }));
@@ -43,11 +35,7 @@ export const milestones: ProjectMilestone[] = [
     name: 'Persiapan Alat',
     project: 'Fiber Optik Jl. Sudirman',
     projectId: 1,
-    deadline: '25 Mar 2025',
-    startDate: '20 Mar 2025',
     icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
-    requiredDocs: 2,
-    uploadedDocs: 2,
     documents: documents.filter(doc => doc.name.includes('Persiapan Alat')),
     progress: 100,
     requiredPhotos: [
@@ -61,11 +49,7 @@ export const milestones: ProjectMilestone[] = [
     name: 'Pemasangan Kabel', 
     project: 'Fiber Optik Tebet', 
     projectId: 2,
-    deadline: '28 Mar 2025',
-    startDate: '20 Mar 2025',
     icon: React.createElement(AlertCircle, { className: "h-4 w-4" }),
-    requiredDocs: 3,
-    uploadedDocs: 1,
     documents: documents.filter(doc => doc.name.includes('Pemasangan Kabel')),
     progress: 40,
     requiredPhotos: [
@@ -80,11 +64,7 @@ export const milestones: ProjectMilestone[] = [
     name: 'Dokumentasi Penutupan', 
     project: 'Fiber Optik Kemang', 
     projectId: 3,
-    deadline: '01 Apr 2025',
-    startDate: '26 Mar 2025',
     icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
-    requiredDocs: 2,
-    uploadedDocs: 1,
     documents: documents.filter(doc => doc.name.includes('Penutupan')),
     progress: 50,
     requiredPhotos: [
@@ -98,11 +78,7 @@ export const milestones: ProjectMilestone[] = [
     name: 'Survey Lokasi',
     project: 'Fiber Optik Tebet',
     projectId: 2,
-    deadline: '25 Mar 2025',
-    startDate: '22 Mar 2025',
     icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
-    requiredDocs: 2,
-    uploadedDocs: 2,
     documents: documents.filter(doc => doc.name.includes('Survey')),
     progress: 100,
     requiredPhotos: [
@@ -116,11 +92,7 @@ export const milestones: ProjectMilestone[] = [
     name: 'Instalasi ODP',
     project: 'Fiber Optik Jl. Sudirman',
     projectId: 1,
-    deadline: '02 Apr 2025',
-    startDate: '30 Mar 2025',
     icon: React.createElement(Clock, { className: "h-4 w-4" }),
-    requiredDocs: 3,
-    uploadedDocs: 0,
     documents: [],
     progress: 0,
     requiredPhotos: [

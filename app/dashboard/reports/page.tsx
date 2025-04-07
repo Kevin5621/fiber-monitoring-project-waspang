@@ -32,11 +32,12 @@ import { dailyReports } from '@/data/project/reports';
 import { projects } from '@/data/project/projects';
 import { usePagination } from '@/hooks/usePagination';
 import { PaginationControl } from '@/components/features/common/pagination-control';
+import { formatDate, formatTime } from '@/lib/utils';
 
 const ReportsPage = () => {
   const [filterProject, setFilterProject] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterDate, setFilterDate] = useState<string | null>(null);
+  const [filterDate, setFilterDate] = useState<Date | null>(null);
   const [activeTab, setActiveTab] = useState('all');
   
   // Use centralized data from reports.ts
@@ -53,7 +54,12 @@ const ReportsPage = () => {
       return true;
     })
     .filter(report => filterProject === 'all' || report.projectId.toString() === filterProject)
-    .filter(report => filterDate === null || report.date === filterDate)
+    .filter(report => {
+      if (!filterDate) return true;
+      // Compare dates without time component
+      const reportDate = new Date(report.submittedAt);
+      return reportDate.toDateString() === filterDate.toDateString();
+    })
     .filter(report => {
       if (!searchQuery) return true;
       const query = searchQuery.toLowerCase();
@@ -104,14 +110,20 @@ const ReportsPage = () => {
 
   // Mengelompokkan laporan berdasarkan tanggal untuk timeline view
   const reportsByDate = filteredReports.reduce<Record<string, typeof reports>>((acc, report) => {
-    if (!acc[report.date]) {
-      acc[report.date] = [];
+    const dateKey = formatDate(report.submittedAt);
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
     }
-    acc[report.date].push(report);
+    acc[dateKey].push(report);
     return acc;
   }, {});
 
-  const dates = Object.keys(reportsByDate).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+  const dates = Object.keys(reportsByDate).sort((a, b) => {
+    // Convert formatted dates back to Date objects for comparison
+    const dateA = new Date(reportsByDate[a][0].submittedAt);
+    const dateB = new Date(reportsByDate[b][0].submittedAt);
+    return dateB.getTime() - dateA.getTime();
+  });
 
   return (
     <div className="container mx-auto p-4 sm:p-6 relative">
@@ -301,11 +313,11 @@ const ReportsPage = () => {
                                 <div className="flex items-center gap-3">
                                   <span className="flex items-center">
                                     <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
-                                    {report.date}
+                                    {formatDate(report.submittedAt)}
                                   </span>
                                   <span className="flex items-center">
                                     <Clock className="h-3.5 w-3.5 mr-1.5" />
-                                    {report.submittedAt}
+                                    {formatTime(report.submittedAt)}
                                   </span>
                                 </div>
                               </div>
@@ -381,7 +393,7 @@ const ReportsPage = () => {
                                     </Avatar>
                                     <span>{report.submittedBy}</span>
                                   </div>
-                                  <span>{report.submittedAt}</span>
+                                  <span>{formatTime(report.submittedAt)}</span>
                                 </div>
                               </div>
                             ))}

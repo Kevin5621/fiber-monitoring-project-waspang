@@ -11,8 +11,7 @@ export interface ProjectDocument {
   fileType: string;
   size: string;
   uploadedBy: string;
-  uploadDate: string;
-  deadline: string;
+  uploadDate: Date;
   description: string;
 }
 
@@ -20,7 +19,6 @@ export const getDocuments = (currentDate: Date): DocumentProps['doc'][] => {
   return documents.map(doc => ({
     name: doc.name,
     project: doc.project,
-    deadline: doc.deadline
   }));
 };
 
@@ -36,8 +34,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '3.2 MB',
     uploadedBy: 'Ahmad Rizal',
-    uploadDate: '18 Mar 2025',
-    deadline: '25 Mar 2025',
+    uploadDate: new Date('2025-0)3-18'),
     description: 'Dokumentasi proses pemasangan kabel fiber optik di area Tebet'
   },
   { 
@@ -50,8 +47,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '2.8 MB',
     uploadedBy: 'Dewi Putri',
-    uploadDate: '20 Mar 2025',
-    deadline: '30 Mar 2025',
+    uploadDate: new Date('20 Mar 2025'),
     description: 'Foto pelabelan kabel fiber optik di junction box Sudirman'
   },
   { 
@@ -64,8 +60,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '4.1 MB',
     uploadedBy: 'Bambang Kusumo',
-    uploadDate: '22 Mar 2025',
-    deadline: '01 Apr 2025',
+    uploadDate: new Date('22 Mar 2025'),
     description: 'Dokumentasi proses penutupan galian kabel di area Kemang'
   },
   { 
@@ -78,8 +73,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '2.5 MB',
     uploadedBy: 'Ahmad Rizal',
-    uploadDate: '15 Mar 2025',
-    deadline: '25 Mar 2025',
+    uploadDate: new Date('15 Mar 2025'),
     description: 'Foto survey lokasi pemasangan fiber optik di Tebet bagian utara'
   },
   { 
@@ -92,8 +86,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '2.7 MB',
     uploadedBy: 'Ahmad Rizal',
-    uploadDate: '15 Mar 2025',
-    deadline: '25 Mar 2025',
+    uploadDate: new Date('15 Mar 2025'),
     description: 'Foto survey lokasi pemasangan fiber optik di Tebet bagian selatan'
   },
   { 
@@ -106,8 +99,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '3.0 MB',
     uploadedBy: 'Rudi Hartono',
-    uploadDate: '12 Mar 2025',
-    deadline: '22 Mar 2025',
+    uploadDate: new Date('12 Mar 2025'),
     description: 'Dokumentasi persiapan peralatan untuk instalasi fiber optik di Sudirman'
   },
   { 
@@ -120,8 +112,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'JPG', 
     size: '2.9 MB',
     uploadedBy: 'Rudi Hartono',
-    uploadDate: '12 Mar 2025',
-    deadline: '22 Mar 2025',
+    uploadDate: new Date('12 Mar 2025'),
     description: 'Dokumentasi persiapan material untuk instalasi fiber optik di Sudirman'
   },
   { 
@@ -134,8 +125,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'PDF', 
     size: '2.4 MB',
     uploadedBy: 'Ahmad Rizal',
-    uploadDate: '12 Mar 2025', 
-    deadline: '20 Mar 2025',
+    uploadDate: new Date('12 Mar 2025'), 
     description: 'Laporan hasil survey lokasi pemasangan fiber optik di Jl. Sudirman'
   },
   { 
@@ -148,8 +138,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'Excel', 
     size: '1.7 MB',
     uploadedBy: 'Budi Santoso',
-    uploadDate: '14 Mar 2025', 
-    deadline: '24 Mar 2025',
+    uploadDate: new Date('14 Mar 2025'), 
     description: 'Daftar material yang dibutuhkan untuk proyek fiber optik'
   },
   { 
@@ -162,8 +151,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'PDF', 
     size: '4.2 MB',
     uploadedBy: 'Rudi Hartono',
-    uploadDate: '16 Mar 2025', 
-    deadline: '26 Mar 2025',
+    uploadDate: new Date('16 Mar 2025'), 
     description: 'Diagram jaringan fiber optik di Jl. Sudirman'
   },
   { 
@@ -176,8 +164,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'Word', 
     size: '1.5 MB',
     uploadedBy: 'Ahmad Rizal',
-    uploadDate: '10 Mar 2025', 
-    deadline: '20 Mar 2025',
+    uploadDate: new Date('10 Mar 2025'), 
     description: 'Rencana implementasi proyek fiber optik di Tebet'
   },
   { 
@@ -190,8 +177,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'PDF', 
     size: '1.1 MB',
     uploadedBy: 'Siti Nuraini',
-    uploadDate: '05 Mar 2025', 
-    deadline: '15 Mar 2025',
+    uploadDate: new Date('05 Mar 2025'), 
     description: 'Notulensi rapat kick-off proyek fiber optik di Kemang'
   },
   { 
@@ -204,8 +190,7 @@ export const documents: ProjectDocument[] = [
     fileType: 'PDF', 
     size: '3.5 MB',
     uploadedBy: 'Bambang Kusumo',
-    uploadDate: '22 Mar 2025', 
-    deadline: '01 Apr 2025',
+    uploadDate: new Date('22 Mar 2025'), 
     description: 'Laporan hasil pemeriksaan kualitas pemasangan fiber optik di Kemang'
   }
 ];

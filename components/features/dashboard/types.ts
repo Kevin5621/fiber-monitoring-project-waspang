@@ -7,13 +7,9 @@ export interface MilestoneProps {
     id: number;
     name: string;
     project: string;
-    deadline: string;
-    startDate: string;
     icon: ReactNode;
     description?: string;
     // Document tracking properties
-    requiredDocs: number;
-    uploadedDocs: number;
     documents?: DocumentProps['doc'][];
   };
 }
@@ -23,7 +19,6 @@ export interface DocumentProps {
   doc?: {
     name: string;
     project: string;
-    deadline: string;
   };
   isAddCard?: boolean;
   onAddDocument?: (name: string, milestoneId: string) => void;
