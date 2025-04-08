@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { ProjectLocation } from '@/data/dashboardData';
 
 // Milestone Types
 export interface MilestoneProps {
@@ -44,7 +43,7 @@ export interface CableConnection {
   from: number; // Project location ID
   to: number; // Project location ID
   isDocumented: boolean;
-  milestoneId: number;
+  milestoneId?: number; 
 }
 
 // Define filter options
@@ -52,19 +51,4 @@ export interface FilterOptions {
   area: string | null;
   category: string | null;
   documentationStatus: boolean | null;
-}
-
-// Project Map Props
-export interface ProjectMapProps {
-  className?: string;
-  projectLocations: ProjectLocation[];
-  milestones?: any[]; // Optional milestone data
-}
-
-// Location Filters Props
-export interface LocationFiltersProps {
-  projectLocations: ProjectLocation[];
-  selectedArea: string | null;
-  setSelectedArea: (area: string | null) => void;
-  navigateMap: (action: string, params: any) => void;
 }

@@ -1,77 +1,94 @@
-import { ProjectLocation } from "../types";
+import { ProjectMilestone } from './milestones';
 
-// Define project locations for fiber optic installations
-export const projectLocations: ProjectLocation[] = [
+export type PoleStatus = 'completed' | 'in-progress' | 'not-started';
+
+export interface PoleLocation {
+  id: number;
+  name: string;
+  coordinates: [number, number]; // [latitude, longitude]
+  projectId: number;
+  milestoneIds: number[]; // Array of milestone IDs associated with this pole
+  description?: string;
+  area: string; // City/area name
+}
+
+// Helper function to calculate pole status based on milestones
+export const getPoleStatus = (pole: PoleLocation, milestones: ProjectMilestone[]): PoleStatus => {
+  const poleMilestones = milestones.filter(m => pole.milestoneIds.includes(m.id));
+  
+  if (poleMilestones.length === 0) return 'not-started';
+  
+  const allComplete = poleMilestones.every(milestone => 
+    milestone.requiredPhotos.every(photo => photo.uploaded)
+  );
+  
+  if (allComplete) return 'completed';
+  
+  const hasProgress = poleMilestones.some(milestone =>
+    milestone.requiredPhotos.some(photo => photo.uploaded)
+  );
+  
+  return hasProgress ? 'in-progress' : 'not-started';
+};
+
+// Sample pole locations data
+export const poleLocations: PoleLocation[] = [
+  // Jakarta - Sudirman
   {
     id: 1,
-    projectId: "FO-JKT-001",
-    name: "Fiber Optik Tebet",
-    location: "Jakarta Selatan",
-    position: [-6.2265, 106.8536], // Tebet, Jakarta
-    isDocumented: true,
-    category: 'distribution'
+    name: 'Pole JKT-SDM-001',
+    coordinates: [-6.2088, 106.8456],
+    projectId: 1,
+    milestoneIds: [1, 5],
+    description: 'Junction box near Sudirman Central Business District',
+    area: 'Jakarta'
   },
   {
     id: 2,
-    projectId: "FO-JKT-002",
-    name: "Fiber Optik Sudirman",
-    location: "Jakarta Pusat",
-    position: [-6.2088, 106.8186], // Sudirman, Jakarta
-    isDocumented: true,
-    category: 'backbone'
+    name: 'Pole JKT-SDM-002',
+    coordinates: [-6.2095, 106.8460],
+    projectId: 1,
+    milestoneIds: [1],
+    description: 'Distribution point near Plaza Indonesia',
+    area: 'Jakarta'
   },
+  // Jakarta - Tebet
   {
     id: 3,
-    projectId: "FO-JKT-003",
-    name: "Fiber Optik Kemang",
-    location: "Jakarta Selatan",
-    position: [-6.2601, 106.8130], // Kemang, Jakarta
-    isDocumented: false,
-    category: 'access'
+    name: 'Pole JKT-TBT-001',
+    coordinates: [-6.2258, 106.8556],
+    projectId: 2,
+    milestoneIds: [2, 4],
+    description: 'Main distribution point Tebet',
+    area: 'Jakarta'
   },
   {
     id: 4,
-    projectId: "FO-JKT-004",
-    name: "Fiber Optik Menteng",
-    location: "Jakarta Pusat",
-    position: [-6.1957, 106.8303], // Menteng, Jakarta
-    isDocumented: true,
-    category: 'backbone'
+    name: 'Pole JKT-TBT-002',
+    coordinates: [-6.2262, 106.8559],
+    projectId: 2,
+    milestoneIds: [2],
+    description: 'Secondary connection point',
+    area: 'Jakarta'
   },
+  // Jakarta - Kemang
   {
     id: 5,
-    projectId: "FO-BDG-001",
-    name: "Fiber Optik Dago",
-    location: "Bandung",
-    position: [-6.8915, 107.6107], // Dago, Bandung
-    isDocumented: false,
-    category: 'distribution'
-  },
-  {
-    id: 6,
-    projectId: "FO-BDG-002",
-    name: "Fiber Optik Pasteur",
-    location: "Bandung",
-    position: [-6.8969, 107.5961], // Pasteur, Bandung
-    isDocumented: true,
-    category: 'access'
-  },
-  {
-    id: 7,
-    projectId: "FO-SMG-001",
-    name: "Fiber Optik Simpang Lima",
-    location: "Semarang",
-    position: [-6.9932, 110.4203], // Simpang Lima, Semarang
-    isDocumented: false,
-    category: 'maintenance'
-  },
-  {
-    id: 8,
-    projectId: "FO-SBY-001",
-    name: "Fiber Optik Tunjungan",
-    location: "Surabaya",
-    position: [-7.2575, 112.7381], // Tunjungan, Surabaya
-    isDocumented: true,
-    category: 'backbone'
-  },
+    name: 'Pole JKT-KMG-001',
+    coordinates: [-6.2601, 106.8133],
+    projectId: 3,
+    milestoneIds: [3],
+    description: 'Main hub Kemang Raya',
+    area: 'Jakarta'
+  }
 ];
+
+// Helper function to get poles by project ID
+export const getPolesByProjectId = (projectId: number): PoleLocation[] => {
+  return poleLocations.filter(pole => pole.projectId === projectId);
+};
+
+// Helper function to get poles by milestone ID
+export const getPolesByMilestoneId = (milestoneId: number): PoleLocation[] => {
+  return poleLocations.filter(pole => pole.milestoneIds.includes(milestoneId));
+};

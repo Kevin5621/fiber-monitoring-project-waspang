@@ -8,16 +8,17 @@ import { DocumentCard } from '@/components/features/dashboard/common/document-ca
 import { StatCard, StatProps } from '@/components/features/dashboard/common/stat-card';
 import { MilestoneChart } from '@/components/features/dashboard/common/milestone-card';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
-import { mockData, ProjectLocation } from '@/data/dashboardData';
+import { mockData } from '@/data/dashboardData';
 import { MilestoneProps, DocumentProps } from '@/components/features/dashboard/types';
-import ProjectMap from '@/components/features/dashboard/map/ProjectMap';
-import LocationFilters from '@/components/features/dashboard/map/LocationFilters';
-import MapLegend from '@/components/features/dashboard/map/MapLegend';
 import { DashboardSkeleton } from '@/components/features/dashboard/DashboardSkeleton';
 import { TabNotification } from '@/components/features/common/tab-notification';
 import { DailyReportCard } from '@/components/features/dashboard/common/daily-report-card';
 import { projects } from '@/data/project/projects';
 import { cn } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+import { poleLocations } from '@/data/project/locations';
+import { Card, CardContent } from '@/components/ui/card';
+import { milestones } from '@/data/project/milestones';
 
 // Define the dashboard data type
 interface DashboardData {
@@ -25,7 +26,6 @@ interface DashboardData {
   mobileStats: StatProps[];
   milestones: MilestoneProps['milestone'][];
   documents: DocumentProps['doc'][];
-  projectLocations: ProjectLocation[];
 }
 
 // Define a type for pending photos
@@ -36,10 +36,15 @@ interface PendingPhoto {
   project: string;
 }
 
+// Import map component dynamically to avoid SSR issues
+const ProjectMap = dynamic(
+  () => import('@/components/features/common/map/project-map'),
+  { ssr: false }
+);
+
 const DashboardPage = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const { currentDate, formattedDate, formattedTime } = useDateTimeFormatter();
-  const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([]);
@@ -55,7 +60,6 @@ const DashboardPage = () => {
     uploaded: boolean;
   }
   
-  // In your useEffect where you extract pending photos
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -93,13 +97,6 @@ const DashboardPage = () => {
     
     loadData();
   }, [currentDate]);
-
-  // Helper function to dispatch map navigation events
-  const navigateMap = (action: string, params: any = {}) => {
-    window.dispatchEvent(new CustomEvent('map-navigate', { 
-      detail: { action, ...params } 
-    }));
-  };
 
   const handleUploadPhoto = (photoName: string, milestoneId: string) => {
     if (!dashboardData) return;
@@ -168,29 +165,24 @@ const DashboardPage = () => {
           </div>
           <div className="grid grid-cols-3 gap-2 mb-4 sm:hidden">
             {dashboardData?.mobileStats.map((stat, i) => <StatCard key={i} stat={stat} />)}
-          </div>      
-          
-          {/* Project Map */}
+          </div>    
+
+          {/* Project Map Overview */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg sm:text-xl font-semibold">Lokasi Proyek</h2>
-              <MapLegend />
             </div>
-            
-            {/* Location Filters Component */}
-            <LocationFilters 
-              projectLocations={dashboardData?.projectLocations || []}
-              selectedArea={selectedArea}
-              setSelectedArea={setSelectedArea}
-              navigateMap={navigateMap}
-            />
-            
-            <div className="h-[300px] sm:h-[400px] w-full">
-              <ProjectMap 
-                projectLocations={dashboardData?.projectLocations || []} 
-                milestones={dashboardData?.milestones || []} 
-              />
-            </div>
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="h-[600px] w-full">
+                  <ProjectMap 
+                    projectLocations={poleLocations}
+                    milestones={milestones}
+                    onPoleClick={(pole) => {}}
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Main Content Tabs */}

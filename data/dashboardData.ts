@@ -1,12 +1,7 @@
-import { ProjectLocation } from './types';
-import { projectLocations } from './project/locations';
 import { getDocuments } from './project/documents';
 import { getMilestones } from './project/milestones';
 import { getActivities } from './project/activities';
 import { calculateStats } from './project/stats';
-
-export type { ProjectLocation };
-export { projectLocations };
 
 export const mockData = (currentDate: Date) => {
   const documents = getDocuments(currentDate);
@@ -20,6 +15,5 @@ export const mockData = (currentDate: Date) => {
     milestones,
     documents,
     activities,
-    projectLocations
   };
 };

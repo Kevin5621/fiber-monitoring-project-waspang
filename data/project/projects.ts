@@ -1,5 +1,4 @@
 import { documents } from './documents';
-import { projectLocations } from './locations';
 
 export interface Project {
   id: number;
@@ -92,11 +91,6 @@ export const getProjectById = (id: number): Project | undefined => {
 // Helper function to get documents by project ID
 export const getDocumentsByProjectId = (projectId: number) => {
   return documents.filter(doc => doc.projectId === projectId);
-};
-
-// Helper function to get project locations
-export const getProjectLocations = () => {
-  return projectLocations;
 };
 
 // Helper function to calculate project statistics

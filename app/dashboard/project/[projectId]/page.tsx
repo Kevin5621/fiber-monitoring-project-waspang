@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProjectById } from "@/data/project/projects";
 import { getProjectStats } from "@/data/project/stats";
 import { getMilestonesByProjectId } from "@/data/project/milestones";
@@ -15,10 +14,21 @@ import ProjectReports from "@/components/features/project-detail/ProjectReports"
 import ProjectDocuments from "@/components/features/project-detail/ProjectDocuments";
 import ProjectOverview from "@/components/features/project-detail/ProjectOverview";
 import ProjectActivities from "@/components/features/project-detail/ProjectActivities";
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function ProjectDetailPage() {
   const { projectId } = useParams();
-  const [activeTab, setActiveTab] = useState("overview");
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState("milestones");
+  
+  // Set active tab based on URL parameter
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['milestones', 'reports', 'documents', 'activities'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
   
   // Convert projectId to number
   const projectIdNum = Number(projectId);
@@ -42,18 +52,18 @@ export default function ProjectDetailPage() {
         <p className="text-muted-foreground">{project.location}</p>
       </div>
       
-      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid grid-cols-5 w-full">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+      {/* Overview section */}
+      <div className="mb-6">
+        <ProjectOverview project={project} stats={projectStats} />
+      </div>
+      
+      <Tabs defaultValue="milestones" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="milestones">Milestones</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="activities">Activities</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="overview">
-          <ProjectOverview project={project} stats={projectStats} />
-        </TabsContent>
         
         <TabsContent value="milestones">
           <ProjectMilestones milestones={milestones} />
