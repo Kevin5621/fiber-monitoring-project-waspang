@@ -41,8 +41,8 @@ export function MapSidebar({
       }`}
     >
       <div className="p-4 flex items-center border-b">
-        <Map className="h-5 w-5 mr-3" />
-        {sidebarOpen && <h2 className="font-semibold">Project Map</h2>}
+        <Filter className="h-5 w-5 mr-3" />
+        {sidebarOpen && <h2 className="font-semibold">Filters</h2>}
         <button 
           onClick={toggleSidebar} 
           className="ml-auto rounded-full p-1 hover:bg-accent transition-colors"
@@ -95,9 +95,6 @@ function SidebarContent({
   return (
     <>
       <div className="p-4 border-b">
-        <p className="text-xs text-muted-foreground mb-2 flex items-center">
-          <Filter className="h-3 w-3 mr-1" /> FILTERS
-        </p>
         <div className="space-y-3">
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">Project</label>

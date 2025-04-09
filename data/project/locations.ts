@@ -88,6 +88,8 @@ export const getPolesByProjectId = (projectId: number): PoleLocation[] => {
   return poleLocations.filter(pole => pole.projectId === projectId);
 };
 
+export const getLocationsByProjectId = getPolesByProjectId;
+
 // Helper function to get poles by milestone ID
 export const getPolesByMilestoneId = (milestoneId: number): PoleLocation[] => {
   return poleLocations.filter(pole => pole.milestoneIds.includes(milestoneId));

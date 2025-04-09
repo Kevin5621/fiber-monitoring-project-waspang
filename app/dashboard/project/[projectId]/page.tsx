@@ -9,11 +9,11 @@ import { getMilestonesByProjectId } from "@/data/project/milestones";
 import { getReportsByProjectId } from "@/data/project/reports";
 import { getDocumentsByProjectId } from "@/data/project/projects";
 import { getActivitiesByProjectId } from "@/data/project/activities";
-import ProjectMilestones from "@/components/features/project-detail/ProjectMilestones";
-import ProjectReports from "@/components/features/project-detail/ProjectReports";
-import ProjectDocuments from "@/components/features/project-detail/ProjectDocuments";
-import ProjectOverview from "@/components/features/project-detail/ProjectOverview";
-import ProjectActivities from "@/components/features/project-detail/ProjectActivities";
+import ProjectMilestones from "@/components/features/project-detail/project-milestones";
+import ProjectReports from "@/components/features/project-detail/project-reports";
+import ProjectDocuments from "@/components/features/project-detail/project-documents";
+import ProjectOverview from "@/components/features/project-detail/project-overview";
+import ProjectActivities from "@/components/features/project-detail/project-activities";
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
@@ -47,10 +47,6 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="container mx-auto p-4 space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-3xl font-bold">{project.name}</h1>
-        <p className="text-muted-foreground">{project.location}</p>
-      </div>
       
       {/* Overview section */}
       <div className="mb-6">
