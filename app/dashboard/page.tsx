@@ -8,17 +8,21 @@ import { DocumentCard } from '@/components/features/dashboard/common/document-ca
 import { StatCard, StatProps } from '@/components/features/dashboard/common/stat-card';
 import { MilestoneChart } from '@/components/features/dashboard/common/milestone-card';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
-import { mockData } from '@/data/dashboardData';
 import { MilestoneProps, DocumentProps } from '@/components/features/dashboard/types';
 import { DashboardSkeleton } from '@/components/features/dashboard/DashboardSkeleton';
 import { TabNotification } from '@/components/features/common/tab-notification';
 import { DailyReportCard } from '@/components/features/dashboard/common/daily-report-card';
-import { projects } from '@/data/project/projects';
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
-import { poleLocations } from '@/data/project/locations';
 import { Card, CardContent } from '@/components/ui/card';
-import { milestones } from '@/data/project/milestones';
+
+// Import Supabase hooks
+import { 
+  useProjects, 
+  useMilestones, 
+  useLocations, 
+  useStats 
+} from '@/utils/hooks/useSupabaseData';
 
 // Define the dashboard data type
 interface DashboardData {
@@ -43,11 +47,19 @@ const ProjectMap = dynamic(
 );
 
 const DashboardPage = () => {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const { currentDate, formattedDate, formattedTime } = useDateTimeFormatter();
-  const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([]);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  
+  // Fetch data using Supabase hooks
+  const { data: projects, isLoading: projectsLoading } = useProjects();
+  const { data: milestones, isLoading: milestonesLoading } = useMilestones();
+  const { data: locations, isLoading: locationsLoading } = useLocations();
+  const { data: stats, isLoading: statsLoading } = useStats(currentDate);
+  
+  // Determine overall loading state
+  const isLoading = projectsLoading || milestonesLoading || locationsLoading || statsLoading;
   
   // Add this effect to handle client-side mounting
   useEffect(() => {
@@ -60,43 +72,41 @@ const DashboardPage = () => {
     uploaded: boolean;
   }
   
+  // Process data when it's loaded
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        // Get data directly without delay
-        const data = mockData(currentDate);
-        setDashboardData(data);
-        
-        // Extract pending photos from milestones
-        if (data.milestones) {
-          const photos: PendingPhoto[] = [];
-          data.milestones.forEach(milestone => {
-            if (milestone.requiredPhotos) {
-              milestone.requiredPhotos
-                .filter((photo: MilestonePhoto) => !photo.uploaded)
-                .forEach((photo: MilestonePhoto) => {
-                  photos.push({
-                    name: photo.name,
-                    milestoneId: milestone.id,
-                    milestoneName: milestone.name,
-                    project: milestone.project
-                  });
+    if (!isLoading && milestones && stats) {
+      // Create dashboard data structure from real data
+      const dashboardStats = stats?.stats || [];
+      const mobileStats = stats?.mobileStats || [];
+      
+      setDashboardData({
+        stats: dashboardStats,
+        mobileStats: mobileStats,
+        milestones: milestones,
+        documents: []
+      });
+      
+      // Extract pending photos from milestones
+      if (milestones) {
+        const photos: PendingPhoto[] = [];
+        milestones.forEach(milestone => {
+          if (milestone.requiredPhotos) {
+            milestone.requiredPhotos
+              .filter(photo => !photo.uploaded)
+              .forEach(photo => {
+                photos.push({
+                  name: photo.name,
+                  milestoneId: milestone.id,
+                  milestoneName: milestone.name,
+                  project: milestone.project
                 });
-            }
-          });
-          setPendingPhotos(photos);
-        }
-      } catch (error) {
-        console.error("Failed to load dashboard data:", error);
-      } finally {
-        // Set loading to false immediately
-        setIsLoading(false);
+              });
+          }
+        });
+        setPendingPhotos(photos);
       }
-    };
-    
-    loadData();
-  }, [currentDate]);
+    }
+  }, [isLoading, milestones, stats]);
 
   const handleUploadPhoto = (photoName: string, milestoneId: string) => {
     if (!dashboardData) return;
@@ -176,9 +186,9 @@ const DashboardPage = () => {
               <CardContent className="p-0">
                 <div className="h-[600px] w-full">
                   <ProjectMap 
-                    projectLocations={poleLocations}
-                    milestones={milestones}
-                    onPoleClick={(pole) => {}}
+                    projectLocations={locations || []}
+                    milestones={milestones || []}
+                    onPoleClick={() => {}}
                   />
                 </div>
               </CardContent>
@@ -231,7 +241,7 @@ const DashboardPage = () => {
                 <TabsContent value="reports" className="pt-2">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projects
-                      .filter(project => !project.isCompleted)
+                      ?.filter(project => !project.isCompleted)
                       .map((project) => (
                         <DailyReportCard 
                           key={project.id}
