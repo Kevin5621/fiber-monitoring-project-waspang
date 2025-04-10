@@ -2,19 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DocumentCard } from '@/components/features/dashboard/common/document-card';
-import { StatCard, StatProps } from '@/components/features/dashboard/common/stat-card';
-import { MilestoneChart } from '@/components/features/dashboard/common/milestone-card';
+import { Badge } from '@/components/common/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/tabs';
+import { DocumentCard } from '@/components/features/pages/dashboard/common/document-card';
+import { StatCard, StatProps } from '@/components/features/pages/dashboard/common/stat-card';
+import { MilestoneChart } from '@/components/features/pages/dashboard/common/milestone-card';
 import { useDateTimeFormatter } from '@/hooks/useDateTimeFormatter';
-import { MilestoneProps, DocumentProps } from '@/components/features/dashboard/types';
-import { DashboardSkeleton } from '@/components/features/dashboard/DashboardSkeleton';
+import { MilestoneProps, DocumentProps } from '@/components/features/pages/dashboard/types';
+import { DashboardSkeleton } from '@/components/features/pages/dashboard/DashboardSkeleton';
 import { TabNotification } from '@/components/features/common/tab-notification';
-import { DailyReportCard } from '@/components/features/dashboard/common/daily-report-card';
+import { DailyReportCard } from '@/components/features/pages/dashboard/common/daily-report-card';
 import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/common/ui/card';
 
 // Import Supabase hooks
 import { 

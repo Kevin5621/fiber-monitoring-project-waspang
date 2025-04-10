@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { Calendar, MapPin, CheckCircle, FileCheck } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/common/ui/card';
+import { Badge } from '@/components/common/ui/badge';
+import { Progress } from '@/components/common/ui/progress';
 import { Project } from '@/data/project/projects';
 
 interface ProjectCardProps {

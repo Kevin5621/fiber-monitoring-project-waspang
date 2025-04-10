@@ -1,9 +1,9 @@
 import React from 'react';
 import { Upload, Plus, Camera } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/common/ui/card';
+import { Button } from '@/components/common/ui/button';
 import { DocumentProps } from '../types';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/common/ui/input';
 import { useState } from 'react';
 
 export const DocumentCard = ({ 

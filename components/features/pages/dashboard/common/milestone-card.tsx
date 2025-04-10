@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/common/ui/card';
+import { Badge } from '@/components/common/ui/badge';
 import { CheckCircle, Clock, AlertCircle, Camera, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface MilestoneChartProps {

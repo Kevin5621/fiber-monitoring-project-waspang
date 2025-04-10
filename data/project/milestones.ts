@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import { MilestoneProps } from '@/components/features/dashboard/types';
+import { MilestoneProps } from '@/components/features/pages/dashboard/types';
 import { documents } from './documents';
 
 export interface ProjectMilestone {

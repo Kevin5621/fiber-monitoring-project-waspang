@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/common/ui/card";
+import { Progress } from "@/components/common/ui/progress";
 import { Project } from "@/data/project/projects";
 import { formatDate } from "@/lib/utils";
 import ProjectMap from "@/components/features/common/map/project-map";

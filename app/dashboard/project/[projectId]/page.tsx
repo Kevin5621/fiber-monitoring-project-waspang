@@ -2,18 +2,18 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/common/ui/tabs";
 import { getProjectById } from "@/data/project/projects";
 import { getProjectStats } from "@/data/project/stats";
 import { getMilestonesByProjectId } from "@/data/project/milestones";
 import { getReportsByProjectId } from "@/data/project/reports";
 import { getDocumentsByProjectId } from "@/data/project/projects";
 import { getActivitiesByProjectId } from "@/data/project/activities";
-import ProjectMilestones from "@/components/features/project-detail/project-milestones";
-import ProjectReports from "@/components/features/project-detail/project-reports";
-import ProjectDocuments from "@/components/features/project-detail/project-documents";
-import ProjectOverview from "@/components/features/project-detail/project-overview";
-import ProjectActivities from "@/components/features/project-detail/project-activities";
+import ProjectMilestones from "@/components/features/pages/project-detail/project-milestones";
+import ProjectReports from "@/components/features/pages/project-detail/project-reports";
+import ProjectDocuments from "@/components/features/pages/project-detail/project-documents";
+import ProjectOverview from "@/components/features/pages/project-detail/project-overview";
+import ProjectActivities from "@/components/features/pages/project-detail/project-activities";
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 

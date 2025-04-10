@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { signInAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/common/form/form-message";
 import { SubmitButton } from "@/components/common/form/submit-button";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/ui/input";
 import { ThemeSwitcher } from "@/components/common/theme-switcher";
 
 interface LoginFormProps {

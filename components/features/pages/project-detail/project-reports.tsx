@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/common/ui/card";
 import { DailyReport } from "@/data/project/reports";
 import { formatDate, formatDateTime } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/common/ui/button";
+import { Input } from "@/components/common/ui/input";
 import { Search, FileText, ChevronDown, ChevronUp, Calendar, User, Clock, AlertCircle } from "lucide-react";
 import { useState } from "react";
 

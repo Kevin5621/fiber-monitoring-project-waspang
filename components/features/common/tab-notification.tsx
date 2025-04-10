@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/common/ui/badge';
 import { cn } from '@/lib/utils';
 import { Camera } from 'lucide-react';
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Calendar, ChevronRight, FileText } from 'lucide-react';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/ui/card';
+import { Badge } from '@/components/common/ui/badge';
+import { Button } from '@/components/common/ui/button';
+import { Separator } from '@/components/common/ui/separator';
 import { Project } from '@/data/project/projects';
 import { checkMissingDailyReports, DailyReportCheck } from '@/data/project/reports';
 import { formatDate } from '@/lib/utils';

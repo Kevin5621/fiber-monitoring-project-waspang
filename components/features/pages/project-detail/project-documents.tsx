@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/common/ui/card";
+import { Badge } from "@/components/common/ui/badge";
 import { ProjectDocument } from "@/data/project/documents";
 import { FileIcon, ImageIcon } from "lucide-react";
 import { formatDate } from "@/lib/utils";

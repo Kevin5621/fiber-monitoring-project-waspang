@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/tabs';
+import { Button } from '@/components/common/ui/button';
+import { Switch } from '@/components/common/ui/switch';
+import { Label } from '@/components/common/ui/label';
+import { Input } from '@/components/common/ui/input';
+import { Separator } from '@/components/common/ui/separator';
 import { 
   User, 
   Bell, 

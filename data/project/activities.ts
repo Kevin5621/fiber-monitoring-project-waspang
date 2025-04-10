@@ -1,4 +1,4 @@
-import { ActivityProps } from '@/components/features/dashboard/types';
+import { ActivityProps } from '@/components/features/pages/dashboard/types';
 
 export interface ProjectActivity {
   id: number;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FileText } from 'lucide-react';
-import { Card, CardTitle } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/common/ui/card';
 
 export const EmptyProjectState = () => {
   return (

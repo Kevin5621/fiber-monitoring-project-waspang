@@ -5,7 +5,7 @@ import { milestonesService } from './milestones.service';
 import { documentsService } from './documents.service';
 import { reportsService } from './reports.service';
 import { formatDate } from './helpers';
-import { StatProps } from '@/components/features/dashboard/common/stat-card';
+import { StatProps } from '@/components/features/pages/dashboard/common/stat-card';
 import { Milestone, FileText, Image } from 'lucide-react';
 import React from 'react';
 

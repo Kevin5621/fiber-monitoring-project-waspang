@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, Filter, Layers, PieChart, Zap, ChevronRight } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/common/ui/select';
 import { PoleStatus } from '@/data/project/locations';
 
 interface MapSidebarProps {

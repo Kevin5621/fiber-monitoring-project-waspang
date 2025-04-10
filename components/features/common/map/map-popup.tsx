@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/common/ui/badge';
 import { Camera, MapPin, ChevronRight, Calendar } from 'lucide-react';
 import { PoleLocation } from '@/data/project/locations';
 import { ProjectMilestone } from '@/data/project/milestones';

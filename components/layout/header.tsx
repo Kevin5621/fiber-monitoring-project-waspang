@@ -5,7 +5,7 @@ import { Menu, X, Bell, User } from 'lucide-react';
 import { ThemeSwitcher } from "../common/theme-switcher";
 import { useState } from "react";
 import { signOutAction } from "@/app/actions";
-import { Button } from "../ui/button";
+import { Button } from "../common/ui/button";
 
 export default function Header({ 
   toggleSidebar,

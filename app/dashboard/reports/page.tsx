@@ -2,32 +2,32 @@
 
 import React, { useState } from 'react';
 import { Calendar, Check, ClipboardList, Clock, FileText, MoreHorizontal, Plus, Search, AlertCircle, CalendarIcon } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/common/ui/card';
+import { Button } from '@/components/common/ui/button';
+import { Badge } from '@/components/common/ui/badge';
+import { Input } from '@/components/common/ui/input';
 import { 
   Select, 
   SelectContent, 
   SelectItem, 
   SelectTrigger, 
   SelectValue 
-} from '@/components/ui/select';
+} from '@/components/common/ui/select';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/common/ui/dropdown-menu";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/components/common/ui/tabs";
 import Link from 'next/link';
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/common/ui/avatar";
 import { dailyReports } from '@/data/project/reports';
 import { projects } from '@/data/project/projects';
 import { usePagination } from '@/hooks/usePagination';

@@ -90,13 +90,6 @@
     --warning: 35 95% 55%;
     --warning-foreground: 0 0% 0%;
     
-    /* Chart Colors */
-    --chart-1: 35 95% 65%;
-    --chart-2: 0 85% 60%;
-    --chart-3: 145 80% 50%;
-    --chart-4: 210 85% 60%;
-    --chart-5: 280 75% 60%;
-    
     /* Scrollbar Colors */
     --scrollbar-track: 25 20% 15%;
     --scrollbar-thumb: 35 95% 60%;

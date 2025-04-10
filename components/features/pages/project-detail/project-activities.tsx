@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/common/ui/card";
 import { ProjectActivity } from "@/data/project/activities";
 
 interface ProjectActivitiesProps {

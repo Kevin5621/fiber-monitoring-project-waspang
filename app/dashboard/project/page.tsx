@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/common/ui/button';
 import { projects } from '@/data/project/projects';
 import { getMilestonesByProjectId } from '@/data/project/milestones';
 import { getDocumentsByProjectId } from '@/data/project/projects';
-import { ProjectFilter } from '@/components/features/project/project-filter';
-import { ProjectGrid } from '@/components/features/project/project-grid';
+import { ProjectFilter } from '@/components/features/pages/project/project-filter';
+import { ProjectGrid } from '@/components/features/pages/project/project-grid';
 import { PaginationControl } from '@/components/features/common/pagination-control';
 
 const ProjectsPage = () => {
